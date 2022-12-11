@@ -7,7 +7,7 @@ we just say kins without instance since the word instance is inside kins
 
 import os
 from os.path import join
-from detectron2.data.datasets import register_coco_instances
+from .coco_amodal import register_aistron_cocolike_instances
 
 
 KINS2020_CATEGORIES = [
@@ -49,29 +49,18 @@ def _get_kins_instances_meta(cat_list):
     return ret
 
 
-def register_kins(root):
-    register_coco_instances("kins_train", _get_kins_instances_meta(KINS_CATEGORIES),
-        join(root, "KINS/annotations/instances_train2017.json"),
-        join(root, "KINS/train2017")
-    )
-
-    register_coco_instances("kins_val", _get_kins_instances_meta(KINS_CATEGORIES),
-        join(root, "KINS/annotations/instances_val2017.json"),
-        join(root, "KINS/val2017")
-    )
 
 def register_kins2020(root):
-    register_coco_instances("kins2020_train", _get_kins_instances_meta(KINS2020_CATEGORIES),
-        join(root, "KINS/annotations/update_train_2020.json"),
-        join(root, "KINS/train2017")
+    register_aistron_cocolike_instances("kins2020_train", _get_kins_instances_meta(KINS2020_CATEGORIES),
+        join(root, "KINS/annotations/update_train_2020_aistron.json"),
+        join(root, "KINS/train_imgs/")
     )
 
-    register_coco_instances("kins2020_val", _get_kins_instances_meta(KINS2020_CATEGORIES),
-        join(root, "KINS/annotations/update_test_2020.json"),
-        join(root, "KINS/val2017")
+    register_aistron_cocolike_instances("kins2020_test", _get_kins_instances_meta(KINS2020_CATEGORIES),
+        join(root, "KINS/annotations/update_test_2020_aistron.json"),
+        join(root, "KINS/test_imgs/")
     )
 
 
 _root = os.getenv("AISTRON_DATASETS", "datasets")
-register_kins(_root)
 register_kins2020(_root)
