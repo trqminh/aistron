@@ -36,7 +36,7 @@ DATASETS:
   TRAIN:
   - kins_train
   TEST:
-  - kins_val
+  - kins_test
 SOLVER:
   IMS_PER_BATCH: 1
   BASE_LR: 0.0025
