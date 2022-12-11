@@ -11,9 +11,9 @@ from detectron2.data import DatasetCatalog, MetadataCatalog, build_detection_tra
 from detectron2.data import detection_utils as utils
 from detectron2.data.build import filter_images_with_few_keypoints
 from detectron2.utils.logger import setup_logger
-from detectron2.utils.visualizer import Visualizer
+from aistron.utils.visualizer import AmodalVisualizer
 
-import aistron
+import aistron # register aistron builtin functions (e.g. registering datasets)
 
 def setup(args):
     cfg = get_cfg()
@@ -78,7 +78,7 @@ if __name__ == "__main__":
                 img = per_image["image"].permute(1, 2, 0).cpu().detach().numpy()
                 img = utils.convert_image_to_rgb(img, cfg.INPUT.FORMAT)
 
-                visualizer = Visualizer(img, metadata=metadata, scale=scale)
+                visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale)
                 target_fields = per_image["instances"].get_fields()
                 labels = [metadata.thing_classes[i] for i in target_fields["gt_classes"]]
                 vis = visualizer.overlay_instances(
@@ -97,6 +97,6 @@ if __name__ == "__main__":
             dicts = filter_images_with_few_keypoints(dicts, 1)
         for dic in tqdm.tqdm(dicts):
             img = utils.read_image(dic["file_name"], "RGB")
-            visualizer = Visualizer(img, metadata=metadata, scale=scale)
-            vis = visualizer.draw_dataset_dict(dic)
+            visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale)
+            vis = visualizer.draw_dataset_dict(dic, option='visible')
             output(vis, os.path.basename(dic["file_name"]))

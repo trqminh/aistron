@@ -8,4 +8,4 @@ mkdir ${output_dir}
 python visualize_data.py --config-file ${config_file} \
     --output-dir ${output_dir} \
     --source "annotation" \
-    --split "test"
+    --split "train"
