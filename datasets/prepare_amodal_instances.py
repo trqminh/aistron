@@ -55,8 +55,9 @@ def bb_intersection_over_union(boxA, boxB):
     return iou
 
 
-def load_coco_json(json_file, image_root, dataset_name=None, extra_annotation_keys=None):
+def process_occluder_gt_and_misc(json_file, image_root, dataset_name=None, extra_annotation_keys=None):
     """
+    To generate the background object mask and occluder gts given the converted aistron json (from a amodal dataset)
     """
     from pycocotools.coco import COCO
 
