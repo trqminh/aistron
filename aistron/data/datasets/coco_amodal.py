@@ -251,7 +251,7 @@ def register_aistron_cocolike_instances(name, metadata, json_file, image_root):
     # 2. Optionally, add metadata about this dataset,
     # since they might be useful in evaluation, visualization or logging
     MetadataCatalog.get(name).set(
-        json_file=json_file, image_root=image_root, evaluator_type="coco", **metadata
+        json_file=json_file, image_root=image_root, evaluator_type="coco_amodal", **metadata
     )
 
 
