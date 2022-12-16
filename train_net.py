@@ -30,6 +30,11 @@ from detectron2.evaluation import (
     verify_results,
 )
 from detectron2.modeling import GeneralizedRCNNWithTTA
+from detectron2.data import build_detection_train_loader
+
+# aistron
+import aistron
+from aistron.data import AmodalDatasetMapper
 
 
 def build_evaluator(cfg, dataset_name, output_folder=None):
@@ -43,7 +48,7 @@ def build_evaluator(cfg, dataset_name, output_folder=None):
         output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
     evaluator_list = []
     evaluator_type = MetadataCatalog.get(dataset_name).evaluator_type
-    if evaluator_type in ["coco"]:
+    if evaluator_type in ["coco_amodal"]:
         evaluator_list.append(COCOEvaluator(dataset_name, output_dir=output_folder))
     if len(evaluator_list) == 0:
         raise NotImplementedError(
@@ -61,6 +66,10 @@ class Trainer(DefaultTrainer):
     are working on a new research project. In that case you can write your
     own training loop. You can use "tools/plain_train_net.py" as an example.
     """
+    @classmethod
+    def build_train_loader(cls, cfg):
+        mapper = AmodalDatasetMapper(cfg, is_train=True)
+        return build_detection_train_loader(cfg, mapper=mapper)
 
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
