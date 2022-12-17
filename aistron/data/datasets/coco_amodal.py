@@ -146,7 +146,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
 
     dataset_dicts = []
 
-    ann_keys = ["iscrowd", "bbox", "keypoints", "category_id", "amodal_bbox", "visible_bbox"] + (extra_annotation_keys or [])
+    ann_keys = ["iscrowd", "bbox", "keypoints", "category_id"] + (extra_annotation_keys or [])
 
     num_instances_without_valid_segmentation = 0
 
@@ -171,6 +171,8 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
             assert anno.get("ignore", 0) == 0, '"ignore" in COCO json file is not supported.'
 
             obj = {key: anno[key] for key in ann_keys if key in anno}
+            obj['amodal_bbox'] = anno['amodal_bbox']
+            obj['visible_bbox'] = anno['visible_bbox']
             if "bbox" in obj and len(obj["bbox"]) == 0:
                 raise ValueError(
                     f"One annotation of image {image_id} contains empty 'bbox' value! "
@@ -198,7 +200,10 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
                 obj["amodal_segm"] = amodal_segm
                 obj["background_objs_segm"] = background_objs_segm
                 obj["visible_segm"] = visible_segm
-                obj["occluder_segm"] = occluder_segm 
+                obj["occluder_segm"] = occluder_segm
+                
+                # for detectron2-based method to work
+                obj["segmentation"] = amodal_segm
 
             keypts = anno.get("keypoints", None)
             if keypts:  # list[int]

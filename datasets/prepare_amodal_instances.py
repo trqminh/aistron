@@ -420,6 +420,9 @@ def convert_to_aistron_cocolike_dict(dataset_dicts, categories):
             coco_annotation["iscrowd"] = annotation.get("iscrowd", 0)
             coco_annotation["category_id"] = annotation["category_id"]
 
+            # keep the annotation still works as standard COCO
+            coco_annotation["bbox"] = coco_annotation["amodal_bbox"]
+            coco_annotation["area"] = coco_annotation["amodal_area"]
 
             # Add optional fields
             if "keypoints" in annotation:
@@ -428,6 +431,8 @@ def convert_to_aistron_cocolike_dict(dataset_dicts, categories):
 
             if "amodal_segm" in annotation:
                 coco_annotation["amodal_segm"] = annotation["amodal_segm"]
+                # keep the annotation still works as standard COCO
+                coco_annotation["segmentation"] = annotation["amodal_segm"]
             if "background_objs_segm" in annotation:
                 coco_annotation["background_objs_segm"] = annotation["background_objs_segm"]
             if "visible_segm" in annotation:
