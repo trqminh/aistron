@@ -1,0 +1,1 @@
+from .meta_arch.amodal_rcnn import GeneralizedRCNNAmodal
