@@ -1,8 +1,26 @@
 <img src="./assets/aistron_logo.svg" width = "320" height = "110" alt="logo" />
 
-AIStron is an amodal instance segmentation (AIS) library that provides current AIS algorithms. The library is built as a detectron2 (version 0.6) project.
+## 1. Introduction
 
-## 1. Installation
+AIStron is an amodal instance segmentation (AIS) library that provides current AIS methods. The library is built as a detectron2 (version 0.6) project. This repository works with Pytorch 1.10+ or higher.
+
+Major features:
+aistron provides the following features, note that the features are mostly collected from other AIS repositories (we add the credit to the specific repository). We simply put all this together for better maintaining and developing new methods.
+- Data pipeline: 
+
+- Amodal Instance Segmentation Evalutor:
+
+- Methods:
+    - [x] (VRSP-Net)[]
+    - [x] BCNet
+    - [x] AISFormer
+
+
+## 2. todos 
+
+
+## 3. Installation
+Follow the below commands to create a python environment for aistron
 ```
 conda create -n aistron python=3.8 -y
 conda activate aistron
