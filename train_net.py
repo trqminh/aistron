@@ -33,8 +33,8 @@ from detectron2.modeling import GeneralizedRCNNWithTTA
 from detectron2.data import build_detection_train_loader
 
 # aistron
-import aistron
 from aistron.data import AmodalDatasetMapper
+from aistron.evaluation import AmodalVisibleEvaluator
 
 
 def build_evaluator(cfg, dataset_name, output_folder=None):
@@ -49,7 +49,8 @@ def build_evaluator(cfg, dataset_name, output_folder=None):
     evaluator_list = []
     evaluator_type = MetadataCatalog.get(dataset_name).evaluator_type
     if evaluator_type in ["coco_amodal"]:
-        evaluator_list.append(COCOEvaluator(dataset_name, output_dir=output_folder))
+        #evaluator_list.append(COCOEvaluator(dataset_name, output_dir=output_folder))
+        evaluator_list.append(AmodalVisibleEvaluator(dataset_name, cfg, False, output_dir=output_folder))
     if len(evaluator_list) == 0:
         raise NotImplementedError(
             "no Evaluator for the dataset {} with the type {}".format(dataset_name, evaluator_type)
