@@ -8,6 +8,8 @@ import torch
 from detectron2.config import configurable
 
 from detectron2.data import detection_utils as utils
+import pycocotools.mask as mask_util
+from detectron2.data.detection_utils import transform_keypoint_annotations
 import detectron2.data.transforms as T
 from detectron2.data.transforms import TransformGen
 
@@ -118,7 +120,7 @@ class AmodalDatasetMapper:
         return ret
     
 
-    def _transform_segm(self, segm, transforms):
+    def _transform_segm(self, segm, transforms, image_size):
         if isinstance(segm, list):
             # polygons
             polygons = [np.asarray(p).reshape(-1, 2) for p in segm]
@@ -133,12 +135,12 @@ class AmodalDatasetMapper:
             return mask
         else:
             raise ValueError(
-                "Cannot transform amodal_segm of type '{}'!"
+                "Cannot transform this segm of type '{}'!"
                 "Supported types are: polygons as list[list[float] or ndarray],"
                 " COCO-style RLE as a dict.".format(type(segm))
             )
     
-    def _segms_to_polygon_masks(self, segms, mask_format):
+    def _segms_to_polygon_masks(self, segms, mask_format, image_size):
         if mask_format == "polygon":
             try:
                 masks = PolygonMasks(segms)
@@ -195,13 +197,13 @@ class AmodalDatasetMapper:
         annotation["visible_bbox"] = np.minimum(visible_bbox, list(image_size + image_size)[::-1])
 
         if "amodal_segm" in annotation:
-            annotation["amodal_segm"] = self._transform_segm(annotation["amodal_segm"], transforms)
+            annotation["amodal_segm"] = self._transform_segm(annotation["amodal_segm"], transforms, image_size)
         if "visible_segm" in annotation:
-            annotation["visible_segm"] = self._transform_segm(annotation["visible_segm"], transforms)
+            annotation["visible_segm"] = self._transform_segm(annotation["visible_segm"], transforms, image_size)
         if "background_objs_segm" in annotation:
-            annotation["background_objs_segm"] = self._transform_segm(annotation["background_objs_segm"], transforms)
+            annotation["background_objs_segm"] = self._transform_segm(annotation["background_objs_segm"], transforms, image_size)
         if "occluder_segm" in annotation:
-            annotation["occluder_segm"] = self._transform_segm(annotation["occluder_segm"], transforms)
+            annotation["occluder_segm"] = self._transform_segm(annotation["occluder_segm"], transforms, image_size)
 
         if "keypoints" in annotation:
             keypoints = transform_keypoint_annotations(
@@ -222,7 +224,12 @@ class AmodalDatasetMapper:
         Returns:
             Instances:
                 It will contain fields "gt_boxes", "gt_classes",
-                "gt_masks", "gt_keypoints", if they can be obtained from `annos`.
+                "gt_masks", "gt_keypoints", "gt_amodal_boxes", "
+                "gt_amodal_masks" 
+                "gt_visible_masks"
+                "gt_background_objs"
+                "gt_occluder_masks"              
+                if they can be obtained from `annos`.
                 This is the format that builtin models expect.
         """
         amodal_boxes = (
@@ -232,9 +239,18 @@ class AmodalDatasetMapper:
             if len(annos)
             else np.zeros((0, 4))
         )
+        visible_boxes = (
+            np.stack(
+                [BoxMode.convert(obj["visible_bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS) for obj in annos]
+            )
+            if len(annos)
+            else np.zeros((0, 4))
+        )
         target = Instances(image_size)
         target.gt_amodal_boxes = Boxes(amodal_boxes)
-        target.gt_boxes = Boxes(amodal_boxes) # for using the default box heads in detectron2
+        target.gt_visible_boxes = Boxes(visible_boxes)
+        
+        target.gt_boxes = Boxes(amodal_boxes) # for using the default box heads in detectron2 (maskrcnn)
 
         classes = [int(obj["category_id"]) for obj in annos]
         classes = torch.tensor(classes, dtype=torch.int64)
@@ -246,10 +262,13 @@ class AmodalDatasetMapper:
             background_objs_segms = [obj["background_objs_segm"] for obj in annos]
             occluder_segms = [obj["occluder_segm"] for obj in annos]
 
-            target.gt_amodal_masks = self._segms_to_polygon_masks(amodal_segms, mask_format)
-            target.gt_visible_masks = self._segms_to_polygon_masks(visible_segms, mask_format)
-            target.gt_background_objs_masks = self._segms_to_polygon_masks(background_objs_segms, mask_format)
-            target.gt_occluder_masks = self._segms_to_polygon_masks(occluder_segms, mask_format)
+            target.gt_amodal_masks = self._segms_to_polygon_masks(amodal_segms, mask_format, image_size)
+            target.gt_visible_masks = self._segms_to_polygon_masks(visible_segms, mask_format, image_size)
+            target.gt_background_objs_masks = self._segms_to_polygon_masks(background_objs_segms, mask_format, image_size)
+            target.gt_occluder_masks = self._segms_to_polygon_masks(occluder_segms, mask_format, image_size)
+
+            # for using default mask heads in detectron2 (maskrcnn)
+            target.gt_masks = target.gt_amodal_masks
 
         if len(annos) and "keypoints" in annos[0]:
             kpts = [obj.get("keypoints", []) for obj in annos]
