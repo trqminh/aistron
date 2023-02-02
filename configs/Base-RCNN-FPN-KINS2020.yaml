@@ -1,7 +1,7 @@
 MODEL:
 #  WEIGHTS: "https://dl.fbaipublicfiles.com/detectron2/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
   WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
-  META_ARCHITECTURE: "GeneralizedRCNN"
+  META_ARCHITECTURE: "GeneralizedRCNNAmodal"
   BACKBONE:
     NAME: "build_resnet_fpn_backbone"
   RESNETS:
@@ -43,7 +43,7 @@ SOLVER:
   STEPS: (30000, 40000)
   MAX_ITER: 48000
   #OPT_TYPE: "SGD"
-  #CHECKPOINT_PERIOD: 40000
+  CHECKPOINT_PERIOD: 16000
 TEST:
   EVAL_PERIOD: 16000
 INPUT:
