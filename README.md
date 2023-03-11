@@ -11,35 +11,13 @@ aistron provides the following features, note that the features are mostly colle
 - Amodal Instance Segmentation Evalutor:
 
 - Methods:
-    - [x] (VRSP-Net)[]
-    - [x] BCNet
-    - [x] AISFormer
+    - [] [MaskRCNN]()
+    - [] [VRSP-Net]()
+    - [] [BCNet]()
+    - [] [AISFormer]()
 
 
-## 2. todos 
+## 2. Installation
+See [installation instructions](docs/INSTALL.md).
 
-
-## 3. Installation
-Follow the below commands to create a python environment for aistron
-```
-conda create -n aistron python=3.8 -y
-conda activate aistron
-conda install pytorch==1.10.0 torchvision==0.11.0 cudatoolkit=11.3 -c pytorch
-pip install ninja yacs cython matplotlib tqdm shapely
-pip install opencv-python==4.4.0.40
-pip install sklearn
-pip install scikit-image
-pip install timm==0.4.12
-
-# coco api
-git clone https://github.com/cocodataset/cocoapi.git
-cd cocoapi/PythonAPI
-python setup.py build_ext install
-
-# clone detectron2 v0.6
-cd detectron2/
-python setup.py build develop
-
-# optional, just in case
-pip install setuptools==59.5.0
-```
+## 3. Getting Started
