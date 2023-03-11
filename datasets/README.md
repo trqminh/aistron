@@ -59,3 +59,32 @@ $AISTRON_DATASETS/
     train_imgs/
     test_imgs/
 ```
+
+With this expected dataset structure, when aistron is imported (`import aistron`), it will register 
+the two kins train and test dataset under the name of `kins2020_train` and `kins2020_test`, respectively.
+These two names can be used by specifying under `DATASETS.TRAIN` and `DATASETS.TEST` in a config file.
+Take a look at [`../aistron/data/datasets/register_kins.py`](../aistron/data/datasets/register_kins.py) for
+more details.
+
+## Prepare D2SA dataset
+
+
+## Prepare COCOA-cls dataset
+
+
+## Visualize datasets
+Run the following command to overlay instance groundtruths on top of the images for specific registered dataset.
+
+```bash
+export AISTRON_DATASETS=../data/datasets/
+output_dir=../data/outtest/aistron_viz_gt_test_kins2020/ # directory to output the visualize images 
+dataset_name=kins2020_test # kins2020_train, d2sa_train, or your_custom_datasets_name
+option=amodal # or visible (the mode of the visualized masks)
+
+python visualize_data.py \
+    --output-dir ${output_dir} \
+    --dataset-name ${dataset_name} \
+    --option ${option} \
+    --source "annotation" \
+
+```

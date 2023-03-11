@@ -21,3 +21,7 @@ aistron provides the following features, note that the features are mostly colle
 See [installation instructions](docs/INSTALL.md).
 
 ## 3. Getting Started
+See [Preparing Datasets for aistron](datasets/README.md).
+
+See [Getting Started with aistron](docs/GETTING_STARTED.md).
+
