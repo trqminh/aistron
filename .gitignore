@@ -9,3 +9,4 @@ build/
 dist/
 wheels/
 scripts
+demo_output.png
