@@ -61,7 +61,8 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
             results.image_size,
             threshold=mask_threshold,
         )
-        results.pred_amodal_masks = results.pred_masks
+        if not results.has("pred_amodal_masks"):
+            results.pred_amodal_masks = results.pred_masks
 
     if results.has("pred_keypoints"):
         results.pred_keypoints[:, :, 0] *= scale_x

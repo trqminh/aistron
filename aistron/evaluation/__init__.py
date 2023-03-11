@@ -1,1 +1,1 @@
-from .amodal_visible_evalutation import AmodalVisibleEvaluator
+from .amodal_evaluation import AmodalInstanceEvaluator
