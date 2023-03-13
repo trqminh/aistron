@@ -1,5 +1,5 @@
-_BASE_: '../Base-RCNN-FPN-KINS2020.yaml'
-OUTPUT_DIR: ../data/train_outputs/aistron/aisformer/aisformer_R50_FPN_kins_ep6_bs1/
+_BASE_: './Base-RCNN-FPN-KINS2020.yaml'
+OUTPUT_DIR: ../data/train_outputs/aistron/aisformer/aisformer_R50_FPN_kins2020_ep6_bs1/
 MODEL:
   WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
   MASK_ON: True
