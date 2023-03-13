@@ -35,6 +35,7 @@ from detectron2.data import build_detection_train_loader
 # aistron
 from aistron.data import AmodalDatasetMapper
 from aistron.evaluation import AmodalInstanceEvaluator
+from aistron import add_aisformer_config
 
 
 def build_evaluator(cfg, dataset_name, output_folder=None):
@@ -98,6 +99,7 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = get_cfg()
+    add_aisformer_config(cfg)
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
