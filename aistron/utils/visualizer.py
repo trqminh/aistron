@@ -29,7 +29,7 @@ class AmodalVisualizer(Visualizer):
                     for x in annos
                 ]
 
-            if option == 'visible':
+            elif option == 'visible':
                 if "visible_segm" in annos[0]:
                     masks = [x["visible_segm"] for x in annos]
                 else:
@@ -38,6 +38,30 @@ class AmodalVisualizer(Visualizer):
                     BoxMode.convert(x["visible_bbox"], x["bbox_mode"], BoxMode.XYXY_ABS)
                     if len(x["visible_bbox"]) == 4
                     else x["visible_bbox"]
+                    for x in annos
+                ]
+
+            elif option == 'background_objs':
+                if "background_objs_segm" in annos[0]:
+                    masks = [x["background_objs_segm"] for x in annos]
+                else:
+                    masks = None
+                boxes = [
+                    BoxMode.convert(x["visible_bbox"], x["bbox_mode"], BoxMode.XYXY_ABS)
+                    if len(x["visible_bbox"]) == 4
+                    else x["visible_bbox"]
+                    for x in annos
+                ]
+
+            else:
+                if "segmentation" in annos[0]:
+                    masks = [x["segmentation"] for x in annos]
+                else:
+                    masks = None
+                boxes = [
+                    BoxMode.convert(x["bbox"], x["bbox_mode"], BoxMode.XYXY_ABS)
+                    if len(x["bbox"]) == 4
+                    else x["bbox"]
                     for x in annos
                 ]
 
