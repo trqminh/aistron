@@ -5,7 +5,7 @@ This document provides a brief intro of the usage of aistron
 ### 1. Inference Demo with Pre-trained Models
 1. Pick a model and its config file from
   [model zoo](../docs/MODEL_ZOO.md),
-  for example, `../configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml`.
+  for example, [`configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml`](../configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml).
 2. We provide `demo.py` that is able to demo builtin configs. Run it with:
 ```bash
 python demo/demo.py --config-file configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml \
@@ -24,7 +24,7 @@ to understand its behavior. Some common arguments are:
 * To run __on cpu__, add `MODEL.DEVICE cpu` after `--opts`.
 * To save outputs to a directory (for images) or a file (for webcam or video), use `--output`.
 
-We provide some demo images from datasets to run the demo on, [../assets/demo_examples/](../assets/demo_examples/). 
+We provide some demo images from datasets to run the demo on, [assets/demo_examples/](../assets/demo_examples/). 
 For example:
 ```bash
 python demo/demo.py --config-file configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml \
@@ -35,7 +35,7 @@ python demo/demo.py --config-file configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep
 ### 2. Train and Evaluation
 We provide a script `train_net.py`, that is made to train all the configs provided in aistron.
 
-To train a model with "train_net.py", first setup the corresponding datasets following [`../datasets/README.md`](../datasets/README.md), then run the following command to train with a specific config file:
+To train a model with "train_net.py", first setup the corresponding datasets following [`datasets/README.md`](../datasets/README.md), then run the following command to train with a specific config file:
 ```bash
 export AISTRON_DATASETS=../data/datasets/
 config_file=configs/KINS2020/aisformer_R50_FPN_kins_6ep_bs1.yaml
