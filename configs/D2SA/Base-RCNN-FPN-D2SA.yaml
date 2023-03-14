@@ -46,7 +46,7 @@ TEST:
   EVAL_PERIOD: 20000
 INPUT:
   MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
-  #MASK_FORMAT: "bitmask"
+  MASK_FORMAT: "bitmask"
 OUTPUT_DIR: '../data/train_outputs/test/'
 SEED: 1234
 
