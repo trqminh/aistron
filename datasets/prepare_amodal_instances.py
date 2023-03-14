@@ -25,6 +25,7 @@ from copy import deepcopy
 
 from detectron2.utils.logger import setup_logger
 import sys
+import pycocotools.mask as mask_util
 
 """
 This file contains functions to parse COCO-format annotations into dicts in "Detectron2 format".
@@ -55,7 +56,7 @@ def bb_intersection_over_union(boxA, boxB):
     return iou
 
 
-def process_occluder_gt_and_misc(json_file, image_root, dataset_name=None, extra_annotation_keys=None):
+def process_occluder_gt_and_misc(json_file, dataset_name=None, extra_annotation_keys=None):
     """
     To generate the background object mask and occluder gts given the converted aistron json (from a amodal dataset)
     """
@@ -238,15 +239,18 @@ def process_occluder_gt_and_misc(json_file, image_root, dataset_name=None, extra
         if len(seg_list) > 0:
             for index, seg in enumerate(seg_list):
                 #print('seg len:', len(seg))
-                invalid = False
-                for sub_seg in seg:
-                    #print('seg len:', len(sub_seg))
-                    if len(sub_seg) < 6:
-                        invalid = True
-                if not invalid:
-                    bitmask = polygons_to_bitmask(seg, img_dict["height"], img_dict["width"])
+                if isinstance(seg, dict):
+                    bitmask = mask_util.decode(seg)
                 else:
-                    bitmask = np.zeros((int(img_dict["height"]), int(img_dict["width"])), dtype=bool)
+                    invalid = False
+                    for sub_seg in seg:
+                        #print('seg len:', len(sub_seg))
+                        if len(sub_seg) < 6:
+                            invalid = True
+                    if not invalid:
+                        bitmask = polygons_to_bitmask(seg, img_dict["height"], img_dict["width"])
+                    else:
+                        bitmask = np.zeros((int(img_dict["height"]), int(img_dict["width"])), dtype=bool)
 
                 bitmask_list.append(bitmask.astype('int'))
 
@@ -254,15 +258,18 @@ def process_occluder_gt_and_misc(json_file, image_root, dataset_name=None, extra
         if len(i_seg_list) > 0:
             for index, seg in enumerate(i_seg_list):
                 #print('seg len:', len(seg))
-                invalid = False
-                for sub_seg in seg:
-                    #print('seg len:', len(sub_seg))
-                    if len(sub_seg) < 6:
-                        invalid = True
-                if not invalid:
-                    bitmask = polygons_to_bitmask(seg, img_dict["height"], img_dict["width"])
+                if isinstance(seg, dict):
+                    bitmask = mask_util.decode(seg)
                 else:
-                    bitmask = np.zeros((int(img_dict["height"]), int(img_dict["width"])), dtype=bool)
+                    invalid = False
+                    for sub_seg in seg:
+                        #print('seg len:', len(sub_seg))
+                        if len(sub_seg) < 6:
+                            invalid = True
+                    if not invalid:
+                        bitmask = polygons_to_bitmask(seg, img_dict["height"], img_dict["width"])
+                    else:
+                        bitmask = np.zeros((int(img_dict["height"]), int(img_dict["width"])), dtype=bool)
 
                 i_bitmask_list.append(bitmask.astype('int'))
 
