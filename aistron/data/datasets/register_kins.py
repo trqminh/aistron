@@ -53,14 +53,25 @@ def _get_kins_instances_meta(cat_list):
 def register_kins2020(root):
     register_aistron_cocolike_instances("kins2020_train", _get_kins_instances_meta(KINS2020_CATEGORIES),
         join(root, "KINS/annotations/update_train_2020_aistron.json"),
-        join(root, "KINS/train_imgs/")
+        join(root, "KINS/training/image_2/")
     )
 
     register_aistron_cocolike_instances("kins2020_test", _get_kins_instances_meta(KINS2020_CATEGORIES),
         join(root, "KINS/annotations/update_test_2020_aistron.json"),
-        join(root, "KINS/test_imgs/")
+        join(root, "KINS/testing/image_2/")
     )
 
+def register_kins(root):
+    register_aistron_cocolike_instances("kins_train", _get_kins_instances_meta(KINS_CATEGORIES),
+        join(root, "KINS/annotations/instances_train_aistron.json"),
+        join(root, "KINS/training/image_2/")
+    )
+
+    register_aistron_cocolike_instances("kins_test", _get_kins_instances_meta(KINS_CATEGORIES),
+        join(root, "KINS/annotations/instances_val_aistron.json"),
+        join(root, "KINS/testing/image_2/")
+    )
 
 _root = os.getenv("AISTRON_DATASETS", "datasets")
 register_kins2020(_root)
+register_kins(_root)
