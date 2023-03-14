@@ -26,10 +26,11 @@ if __name__ == "__main__":
     """  
     logger = setup_logger(name=__name__)
 
-    tmp_json_fname, categories = convert_kins2020_json_to_aistron_format(sys.argv[1])
+    json_ann_path = sys.argv[1]
+    tmp_json_fname, categories = convert_kins2020_json_to_aistron_format(json_ann_path)
     # TODO: make these steps less redundant
     # current preprocess steps utilize BCNet preprocess code
-    d2_dicts = process_occluder_gt_and_misc(tmp_json_fname, sys.argv[2]) # the processed dict is in det2 obj
+    d2_dicts = process_occluder_gt_and_misc(tmp_json_fname) # the processed dict is in det2 obj
     coco_dict = convert_to_aistron_cocolike_dict(d2_dicts, categories) # convert det2 obj to cocolike dict
 
     output_file = os.path.splitext(sys.argv[1].split('/')[-1])[0] + '_aistron.json'
