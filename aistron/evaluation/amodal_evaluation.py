@@ -12,7 +12,6 @@ from collections import OrderedDict
 import pycocotools.mask as mask_util
 import torch
 from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
 from tabulate import tabulate
 
 import detectron2.utils.comm as comm
@@ -25,10 +24,13 @@ from detectron2.utils.logger import create_small_table
 
 from detectron2.evaluation import DatasetEvaluator
 
-try:
-    from detectron2.evaluation.fast_eval_api import COCOeval_opt
-except ImportError:
-    COCOeval_opt = COCOeval
+# try:
+#     from detectron2.evaluation.fast_eval_api import COCOeval_opt
+# except ImportError:
+#     COCOeval_opt = COCOeval
+
+from .amodal_cocoeval import AmodalCOCOeval as COCOeval
+COCOeval_opt = COCOeval
 
 
 class AmodalInstanceEvaluator(DatasetEvaluator):
@@ -609,8 +611,7 @@ def _evaluate_predictions_on_coco(
     """
     assert len(coco_results) > 0
 
-    if "segm" in iou_type:
-        iou_type = 'segm'
+    if iou_type == 'segm' or iou_type == 'amodal_segm' or iou_type == 'visible_segm':
         coco_results = copy.deepcopy(coco_results)
         # When evaluating mask AP, if the results contain bbox, cocoapi will
         # use the box area as the area of the instance, instead of the mask area.
@@ -744,7 +745,7 @@ class COCOevalMaxDets(COCOeval):
         if not self.eval:
             raise Exception("Please run accumulate() first")
         iouType = self.params.iouType
-        if iouType == "segm" or iouType == "bbox":
+        if iouType == "segm" or iouType == "bbox" or iouType == 'amodal_segm' or iouType == 'visible_segm':
             summarize = _summarizeDets
         elif iouType == "keypoints":
             summarize = _summarizeKps

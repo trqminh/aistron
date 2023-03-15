@@ -4,10 +4,10 @@ import numpy as np
 import datetime
 import time
 from collections import defaultdict
-from . import mask as maskUtils
+from pycocotools import mask as maskUtils
 import copy
 
-class COCOeval:
+class AmodalCOCOeval:
     # Interface for evaluating detection on the Microsoft COCO dataset.
     #
     # The usage for CocoEval is as follows:
@@ -86,11 +86,36 @@ class COCOeval:
         Prepare ._gts and ._dts for evaluation based on params
         :return: None
         '''
+        def amodal_annToRLE(ann, imgs, mask_type=None):
+            """
+            Convert annotation which can be polygons, uncompressed RLE to RLE.
+            :return: binary mask (numpy 2D array)
+            """
+            t = imgs[ann['image_id']]
+            h, w = t['height'], t['width']
+            segm = ann[mask_type]
+            if type(segm) == list:
+                # polygon -- a single object might consist of multiple parts
+                # we merge all parts into one mask rle code
+                rles = maskUtils.frPyObjects(segm, h, w)
+                rle = maskUtils.merge(rles)
+            elif type(segm['counts']) == list:
+                # uncompressed RLE
+                rle = maskUtils.frPyObjects(segm, h, w)
+            else:
+                # rle
+                rle = ann[mask_type]
+            return rle
+
         def _toMask(anns, coco):
             # modify ann['segmentation'] by reference
             for ann in anns:
-                rle = coco.annToRLE(ann)
-                ann['segmentation'] = rle
+                segmentation_rle = amodal_annToRLE(ann, coco.imgs, 'segmentation')
+                amodal_segm_rle = amodal_annToRLE(ann, coco.imgs, 'amodal_segm')
+                visible_segm_rle = amodal_annToRLE(ann, coco.imgs, 'visible_segm')
+                ann['segmentation'] = segmentation_rle
+                ann['amodal_segm'] = amodal_segm_rle
+                ann['visible_segm'] = visible_segm_rle
         p = self.params
         if p.useCats:
             gts=self.cocoGt.loadAnns(self.cocoGt.getAnnIds(imgIds=p.imgIds, catIds=p.catIds))
@@ -99,8 +124,8 @@ class COCOeval:
             gts=self.cocoGt.loadAnns(self.cocoGt.getAnnIds(imgIds=p.imgIds))
             dts=self.cocoDt.loadAnns(self.cocoDt.getAnnIds(imgIds=p.imgIds))
 
-        # convert ground truth to mask if iouType == 'segm'
-        if p.iouType == 'segm':
+        # convert ground truth to mask if iouType == 'segm' or p.iouType == 'amodal_segm' or p.iouType == 'visible_segm'
+        if p.iouType == 'segm' or p.iouType == 'amodal_segm' or p.iouType == 'visible_segm':
             _toMask(gts, self.cocoGt)
             _toMask(dts, self.cocoDt)
         # set ignore flag
@@ -141,7 +166,8 @@ class COCOeval:
         # loop through images, area range, max detection number
         catIds = p.catIds if p.useCats else [-1]
 
-        if p.iouType == 'segm' or p.iouType == 'bbox':
+        if p.iouType == 'segm' or p.iouType == 'bbox' or \
+            p.iouType == 'visible_segm' or p.iouType == 'amodal_segm':
             computeIoU = self.computeIoU
         elif p.iouType == 'keypoints':
             computeIoU = self.computeOks
@@ -178,6 +204,12 @@ class COCOeval:
         if p.iouType == 'segm':
             g = [g['segmentation'] for g in gt]
             d = [d['segmentation'] for d in dt]
+        elif p.iouType == 'amodal_segm':
+            g = [g['amodal_segm'] for g in gt]
+            d = [d['amodal_segm'] for d in dt]
+        elif p.iouType == 'visible_segm':
+            g = [g['visible_segm'] for g in gt]
+            d = [d['visible_segm'] for d in dt]
         elif p.iouType == 'bbox':
             g = [g['bbox'] for g in gt]
             d = [d['bbox'] for d in dt]
@@ -486,7 +518,7 @@ class COCOeval:
         if not self.eval:
             raise Exception('Please run accumulate() first')
         iouType = self.params.iouType
-        if iouType == 'segm' or iouType == 'bbox':
+        if iouType == 'segm' or iouType == 'bbox' or iouType == 'amodal_segm' or iouType == 'visible_segm':
             summarize = _summarizeDets
         elif iouType == 'keypoints':
             summarize = _summarizeKps
@@ -523,7 +555,8 @@ class Params:
         self.kpt_oks_sigmas = np.array([.26, .25, .25, .35, .35, .79, .79, .72, .72, .62,.62, 1.07, 1.07, .87, .87, .89, .89])/10.0
 
     def __init__(self, iouType='segm'):
-        if iouType == 'segm' or iouType == 'bbox':
+        if iouType == 'segm' or iouType == 'bbox' \
+            or iouType == 'amodal_segm' or iouType == 'visible_segm':
             self.setDetParams()
         elif iouType == 'keypoints':
             self.setKpParams()

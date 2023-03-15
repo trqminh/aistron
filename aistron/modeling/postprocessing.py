@@ -41,20 +41,26 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
     if results.has("pred_amodal_masks"):
         results.pred_amodal_masks = paste_masks_in_image(
             results.pred_amodal_masks[:, 0, :, :],  # N, 1, M, M
-            results.pred_amodal_boxes,
+            results.pred_boxes,
             results.image_size,
             threshold=mask_threshold,
         )
+        if not results.has("pred_masks"):
+            results.pred_masks = results.pred_amodal_masks # this is for coco evaluation to work
+            # since it needs a pred_masks in prediction for coco api to create index
+            # bbox can create index too, but if iou_type segm, they pop it out
+            # it's in the loadRes method in coco.py
+
     if results.has("pred_visible_masks"):
         results.pred_visible_masks = paste_masks_in_image(
             results.pred_visible_masks[:, 0, :, :],  # N, 1, M, M
-            results.pred_visible_boxes,
+            results.pred_boxes,
             results.image_size,
             threshold=mask_threshold,
         )
 
 
-    if results.has("pred_masks"): # maskrcnn cases
+    if results.has("pred_masks") and not results.has('pred_amodal_masks'): # maskrcnn cases
         results.pred_masks = paste_masks_in_image(
             results.pred_masks[:, 0, :, :],  # N, 1, M, M
             results.pred_boxes,
