@@ -25,7 +25,8 @@ conda install pytorch==1.10.0 torchvision==0.11.0 cudatoolkit=11.3 -c pytorch
 pip install pycocotools
 
 #  detectron2
-python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+python -m pip install detectron2 -f \
+  https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
 
 # other dependencies
 pip install ninja yacs cython matplotlib tqdm shapely
