@@ -20,7 +20,6 @@ from .transformer import (
 from detectron2.config import configurable
 from detectron2.structures import Instances
 from detectron2.modeling.roi_heads.mask_head import ROI_MASK_HEAD_REGISTRY
-from detectron2.layers.wrappers import move_device_like
 
 
 __all__= ["AISFormer"]
@@ -196,6 +195,15 @@ class AISFormer(nn.Module):
         return mask_loss
 
     @staticmethod
+    @torch.jit.script_if_tracing
+    def move_device_like(src: torch.Tensor, dst: torch.Tensor) -> torch.Tensor:
+        """
+        Tracing friendly way to cast tensor to another tensor's device. Device will be treated
+        as constant during tracing, scripting the casting process as whole can workaround this issue.
+        """
+        return src.to(dst.device)
+
+    @staticmethod
     def mask_inference(pred_mask_logits: torch.Tensor, 
                        pred_instances: List[Instances],
                        pred_mask_type=None):
@@ -232,7 +240,7 @@ class AISFormer(nn.Module):
                 if torch.jit.is_scripting()
                 else ("cpu" if torch.jit.is_tracing() else class_pred.device)
             )
-            indices = move_device_like(torch.arange(num_masks, device=device), class_pred)
+            indices = self.move_device_like(torch.arange(num_masks, device=device), class_pred)
             mask_probs_pred = pred_mask_logits[indices, class_pred][:, None].sigmoid()
         # mask_probs_pred.shape: (B, 1, Hmask, Wmask)
 
