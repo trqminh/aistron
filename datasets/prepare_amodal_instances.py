@@ -182,6 +182,10 @@ def process_occluder_gt_and_misc(json_file, dataset_name=None, extra_annotation_
             if segm:  # either list[list[float]] or dict(RLE)
                 if not isinstance(segm, dict):
                     # filter out invalid polygons (< 3 points)
+                    if not all(isinstance(elem, list) for elem in segm):
+                        # this is the exceptional case of cocoa json where
+                        # maybe they assume there is just one mask blob inside of the region of interest
+                        segm = [segm]
                     segm = [poly for poly in segm if len(poly) % 2 == 0 and len(poly) >= 6]
                     if len(segm) == 0:
                         num_instances_without_valid_segmentation += 1
@@ -192,6 +196,10 @@ def process_occluder_gt_and_misc(json_file, dataset_name=None, extra_annotation_
             if i_segm:  # either list[list[float]] or dict(RLE)
                 if not isinstance(i_segm, dict):
                     # filter out invalid polygons (< 3 points)
+                    if not all(isinstance(elem, list) for elem in i_segm):
+                        # this is the exceptional case of cocoa json where
+                        # maybe they assume there is just one mask blob inside of the region of interest
+                        i_segm = [i_segm]
                     i_segm = [poly for poly in i_segm if len(poly) % 2 == 0 and len(poly) >= 6]
                     if len(i_segm) == 0:
                         num_instances_without_valid_segmentation += 1
