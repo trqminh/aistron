@@ -82,10 +82,41 @@ Take a look at [`aistron/data/datasets/register_kins.py`](../aistron/data/datase
 more details.
 
 ## Prepare D2SA dataset
-TBA
+TODO: describe more on the dataset preparation and structure
+
+Running the following commands to get the aistron universal format json file for D2SA annotations:
+```bash
+export AISTRON_DATASETS=../data/datasets/
+
+python datasets/prepare_d2sa.py \
+        $AISTRON_DATASETS/D2SA/d2s_amodal_annotations_v1/D2S_amodal_training_rot0.json \
+
+python datasets/prepare_d2sa.py \
+        $AISTRON_DATASETS/D2SA/d2s_amodal_annotations_v1/D2S_amodal_augmented.json \
+
+python datasets/prepare_d2sa.py \
+        $AISTRON_DATASETS/D2SA/d2s_amodal_annotations_v1/D2S_amodal_validation.json \
+```
 
 ## Prepare COCOA-cls dataset
-TBA
+TODO: describe more on the dataset preparation and structure
+
+Running the following commands to get the aistron universal format json file for COCOA annotations:
+```bash
+export AISTRON_DATASETS=../data/datasets/
+
+python datasets/prepare_cocoa.py \
+        $AISTRON_DATASETS/COCOA/annotations/COCO_amodal_train2014_detectron_no_stuff.json \
+
+python datasets/prepare_cocoa.py \
+        $AISTRON_DATASETS/COCOA/annotations/COCO_amodal_val2014_detectron_no_stuff.json \
+
+python datasets/prepare_cocoa.py \
+        $AISTRON_DATASETS/COCOA/annotations/COCO_amodal_train2014_with_classes.json \
+
+python datasets/prepare_cocoa.py \
+        $AISTRON_DATASETS/COCOA/annotations/COCO_amodal_val2014_with_classes.json \
+```
 
 ## Visualize datasets
 Run the following command to overlay instance groundtruths on top of the images for specific registered dataset.
