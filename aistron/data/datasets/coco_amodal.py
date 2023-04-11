@@ -183,27 +183,36 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
             background_objs_segm = anno.get("background_objs_segm", None)
             visible_segm = anno.get("visible_segm", None)
             occluder_segm = anno.get("occluder_segm", None)
-            if amodal_segm:  # either list[list[float]] or dict(RLE)
-                if isinstance(amodal_segm, dict):
-                    if isinstance(amodal_segm["counts"], list):
+            def get_segm(segm):
+                if segm == None:
+                    return None
+
+                if isinstance(segm, dict):
+                    if isinstance(segm["counts"], list):
                         # convert to compressed RLE
-                        amodal_segm = mask_util.frPyObjects(amodal_segm, *amodal_segm["size"])
+                        segm = mask_util.frPyObjects(segm, *segm["size"])
                 else:
                     # filter out invalid polygons (< 3 points)
-                    amodal_segm = [poly for poly in amodal_segm if len(poly) % 2 == 0 and len(poly) >= 6]
-                    background_objs_segm = [poly for poly in background_objs_segm if len(poly) % 2 == 0 and len(poly) >= 6]
-                    visible_segm = [poly for poly in visible_segm if len(poly) % 2 == 0 and len(poly) >= 6]
-                    occluder_segm = [poly for poly in occluder_segm if len(poly) % 2 == 0 and len(poly) >= 6]
-                    if len(amodal_segm) == 0:
-                        num_instances_without_valid_segmentation += 1
-                        continue  # ignore this instance
-                obj["amodal_segm"] = amodal_segm
-                obj["background_objs_segm"] = background_objs_segm
-                obj["visible_segm"] = visible_segm
-                obj["occluder_segm"] = occluder_segm
-                
-                # for detectron2-based method to work
-                obj["segmentation"] = amodal_segm
+                    segm = [poly for poly in segm if len(poly) % 2 == 0 and len(poly) >= 6]
+                    if len(segm) == 0:
+                        return segm, False
+
+                return segm, True
+
+
+
+            obj["amodal_segm"], valid = get_segm(amodal_segm)
+            if obj["amodal_segm"] == None:
+                continue
+            if not valid:
+                num_instances_without_valid_segmentation += 1
+                continue
+            obj["background_objs_segm"], _ = get_segm(background_objs_segm)
+            obj["visible_segm"], _ = get_segm(visible_segm)
+            obj["occluder_segm"], _ = get_segm(occluder_segm)
+
+            # for detectron2-based method to work
+            obj["segmentation"] = amodal_segm
 
             keypts = anno.get("keypoints", None)
             if keypts:  # list[int]
