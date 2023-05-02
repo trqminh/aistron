@@ -185,7 +185,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
             occluder_segm = anno.get("occluder_segm", None)
             def get_segm(segm):
                 if segm == None:
-                    return None
+                    return None, False
 
                 if isinstance(segm, dict):
                     if isinstance(segm["counts"], list):
@@ -199,14 +199,16 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
 
                 return segm, True
 
-
-
-            obj["amodal_segm"], valid = get_segm(amodal_segm)
-            if obj["amodal_segm"] == None:
+            amodal_segm, valid = get_segm(amodal_segm)
+            if amodal_segm == None:
                 continue
             if not valid:
                 num_instances_without_valid_segmentation += 1
                 continue
+            
+            obj["amodal_segm"] = amodal_segm
+
+            # we just care about the amodal segm is valid or not
             obj["background_objs_segm"], _ = get_segm(background_objs_segm)
             obj["visible_segm"], _ = get_segm(visible_segm)
             obj["occluder_segm"], _ = get_segm(occluder_segm)
