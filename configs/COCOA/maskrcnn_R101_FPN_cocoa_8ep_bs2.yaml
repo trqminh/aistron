@@ -1,0 +1,7 @@
+_BASE_: './Base-RCNN-FPN-COCOA.yaml'
+OUTPUT_DIR: ../data/train_outputs/aistron/maskrcnn/maskrcnn_R101_FPN_cocoa_8ep_bs2/
+MODEL:
+  WEIGHTS: "https://dl.fbaipublicfiles.com/detectron2/new_baselines/mask_rcnn_R_101_FPN_400ep_LSJ/42073830/model_final_f96b26.pkl" 
+  MASK_ON: True
+  RESNETS:
+    DEPTH: 101
