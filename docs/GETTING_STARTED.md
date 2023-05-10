@@ -38,7 +38,7 @@ We provide a script `train_net.py`, that is made to train all the configs provid
 To train a model with "train_net.py", first setup the corresponding datasets following [`datasets/README.md`](../datasets/README.md), then run the following command to train with a specific config file:
 ```bash
 export AISTRON_DATASETS=../data/datasets/
-config_file=configs/KINS2020/aisformer_R50_FPN_kins_6ep_bs1.yaml
+config_file=configs/KINS2020/maskrcnn_R50_FPN_kins_6ep_bs1.yaml
 python train_net.py --config-file ${config_file} --num-gpus 1 \
 ```
 During training, the model configs, checkpoints and logs will be saved to the directory specified in the OUTPUT_DIR variable in the corresponding config file.
