@@ -199,18 +199,24 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
 
                 return segm, True
 
-            amodal_segm, valid = get_segm(amodal_segm)
+            visible_segm, vi_valid = get_segm(visible_segm)
+            if visible_segm == None:
+                continue
+            if not vi_valid:
+                num_instances_without_valid_segmentation += 1
+                continue
+
+            amodal_segm, a_valid = get_segm(amodal_segm)
             if amodal_segm == None:
                 continue
-            if not valid:
+            if not a_valid:
                 num_instances_without_valid_segmentation += 1
                 continue
             
             obj["amodal_segm"] = amodal_segm
+            obj["visible_segm"] = visible_segm
 
-            # we just care about the amodal segm is valid or not
             obj["background_objs_segm"], _ = get_segm(background_objs_segm)
-            obj["visible_segm"], _ = get_segm(visible_segm)
             obj["occluder_segm"], _ = get_segm(occluder_segm)
 
             # for detectron2-based method to work
