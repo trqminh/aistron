@@ -69,9 +69,8 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
         )
         if not results.has("pred_amodal_masks"):
             results.pred_amodal_masks = results.pred_masks
+        if not results.has("pred_visible_masks"):
+            results.pred_visible_masks = results.pred_masks
 
-    if results.has("pred_keypoints"):
-        results.pred_keypoints[:, :, 0] *= scale_x
-        results.pred_keypoints[:, :, 1] *= scale_y
 
     return results
