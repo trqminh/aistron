@@ -42,8 +42,8 @@ $AISTRON_DATASETS/
       update_test_2020.json
       instances_train.json
       instances_val.json
-    train_imgs/
-    test_imgs/
+    training/
+    testing/
 ```
 Then, running the following commands to get the aistron universal format json file for KINS annotation:
 ```bash
@@ -71,8 +71,8 @@ $AISTRON_DATASETS/
       instances_train_aistron.json
       instances_val.json
       instances_val_aistron.json
-    train_imgs/
-    test_imgs/
+    training/
+    testing/
 ```
 
 With this expected dataset structure, when aistron is imported (`import aistron`), it will register 
