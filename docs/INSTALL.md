@@ -37,6 +37,7 @@ pip install timm==0.4.12
 pip install setuptools==59.5.0
 
 # aistron
-# clone aistron
+git clone https://github.com/trqminh/aistron.git
+cd aistron/
 python -m pip install -e .
 ```
