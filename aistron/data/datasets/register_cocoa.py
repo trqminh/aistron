@@ -126,6 +126,11 @@ def register_cocoa(root):
         join(root, "COCOA/val2014/")
     )
 
+    register_aistron_cocolike_instances("cocoa_test", _get_cocoa_instances_meta(COCOA_CATEGORIES),
+        join(root, "COCOA/annotations/COCO_amodal_test2014_detectron_no_stuff_aistron.json"),
+        join(root, "COCOA/test2014/")
+    )
+
 def register_cocoa_cls(root):
     register_aistron_cocolike_instances("cocoa_cls_train", _get_cocoa_instances_meta(COCOA_cls_CATEGORIES),
         join(root, "COCOA/annotations/COCO_amodal_train2014_with_classes_aistron.json"),
