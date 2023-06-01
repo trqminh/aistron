@@ -2,13 +2,15 @@
 
 Lei Ke, Yu-Wing Tai, Chi-Keung Tang
 
-[[`Paper`](https://openaccess.thecvf.com/content/CVPR2021/papers/Ke_Deep_Occlusion-Aware_Instance_Segmentation_With_Overlapping_BiLayers_CVPR_2021_paper.pdf)] [[`Github`](https://github.com/lkeab/BCNet)]
+[[`Paper`](https://openaccess.thecvf.com/content/CVPR2021/papers/Ke_Deep_Occlusion-Aware_Instance_Segmentation_With_Overlapping_BiLayers_CVPR_2021_paper.pdf)] [[`Original Github`](https://github.com/lkeab/BCNet)]
 
-TODO: Insert Figure here
+![image](https://github.com/trqminh/aistron/assets/30286786/7bd8c889-4ce6-4017-81d8-6e49b944a574)
 
-In this repository, we reproduce BCNet in aistron based on the original code [BCNet](https://github.com/lkeab/BCNet).
-We implement BCNet with Faster R-CNN as meta-arch. We will attempt to implement BCNet with FCOS meta-arch as well. 
-Pull requests are welcome.
+In this repository, we aim to replicate BCNet in aistron, 
+using the original BCNet [code](https://github.com/lkeab/BCNet) as our reference. 
+We have implemented BCNet with the Faster R-CNN meta-architecture
+and are also planning to explore its implementation with the FCOS meta-architecture. 
+We encourage and welcome pull requests from the community.
 
 
 ## Training
