@@ -1,0 +1,14 @@
+_BASE_: './Base-RCNN-FPN-D2SA.yaml'
+OUTPUT_DIR: ../data/train_outputs/aistron/aisformer/aisformer_R50_FPN_d2sa_18ep_bs2/
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: True
+  RESNETS:
+    DEPTH: 50
+  ROI_MASK_HEAD:
+    NAME: AISFormer
+AISFORMER:
+  INVISIBLE_MASK_LOSS: True
+  N_LAYERS: 1
+  N_HEADS: 2
+  EMB_DIM: 256
