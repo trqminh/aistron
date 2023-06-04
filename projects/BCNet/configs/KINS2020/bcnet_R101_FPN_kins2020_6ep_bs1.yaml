@@ -1,0 +1,6 @@
+_BASE_: './bcnet_R50_FPN_kins2020_6ep_bs1.yaml'
+OUTPUT_DIR: ../data/train_outputs/aistron/bcnet/bcnet_R101_FPN_kins2020_6ep_bs1/
+MODEL:
+  WEIGHTS: "https://dl.fbaipublicfiles.com/detectron2/new_baselines/mask_rcnn_R_101_FPN_400ep_LSJ/42073830/model_final_f96b26.pkl" 
+  RESNETS:
+    DEPTH: 101

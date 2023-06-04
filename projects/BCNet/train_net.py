@@ -36,6 +36,9 @@ from detectron2.data import build_detection_train_loader
 from aistron.data import AmodalDatasetMapper
 from aistron.evaluation import AmodalInstanceEvaluator
 
+# bcnet
+import bcnet
+
 
 def build_evaluator(cfg, dataset_name, output_folder=None):
     """

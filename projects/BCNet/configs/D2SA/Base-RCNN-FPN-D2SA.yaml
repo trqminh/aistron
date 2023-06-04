@@ -1,0 +1,20 @@
+_BASE_: '../Base-RCNN-FPN.yaml'
+MODEL:
+  ROI_HEADS:
+    NUM_CLASSES: 60
+DATASETS:
+  TRAIN: ("d2sa_train_aug","d2sa_train")
+  TEST: ("d2sa_val",)
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 0.005
+  STEPS: (40000, 60000)
+  MAX_ITER: 70000
+  #OPT_TYPE: "SGD"
+  #CHECKPOINT_PERIOD: 10000
+TEST:
+  EVAL_PERIOD: 20000
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+  MASK_FORMAT: "bitmask"
+
