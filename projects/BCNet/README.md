@@ -16,15 +16,13 @@ We encourage and welcome pull requests from the community.
 ## Training
 All configs can be trained with:
 ```bash
-cd projects/BCNet/
-python train_net.py --config-file /path/to/config.yaml --num-gpus 1
+python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.yaml --num-gpus 1
 ```
 
 ## Evaluation
 Model evaluation can be done as follows:
 ```bash
-cd projects/BCNet/
-python train_net.py --config-file projects/BCNet/configs/path/to/config.yaml \
+python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.yaml \
     --eval-only MODEL.WEIGHTS /path/to/the/model/weight.pth
 ```
 
@@ -47,3 +45,10 @@ COCOA No stuff, no class dataset
 | Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
 |-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
 |[BCNet]()|Resnet-101|~8|...|...|-|[model]()|
+
+### COCOA-cls Dataset
+COCOA with classes
+
+| Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
+|-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
+|[BCNet]()|Resnet-50|~8|...|...|-|[model]()|
