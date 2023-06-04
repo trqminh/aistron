@@ -1,4 +1,10 @@
-export CUDA_VISBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=2
 export AISTRON_DATASETS=../data/datasets/
 
-python train_net.py --config-file configs/KINS2020/aisformer_R50_FPN_kins2020_6ep_bs1.yaml --num-gpus 1 \
+#python projects/AISFormer/train_net.py --config-file projects/AISFormer/configs/KINS2020/aisformer_R50_FPN_kins2020_6ep_bs1.yaml --num-gpus 1 \
+
+#python projects/AISFormer/train_net.py --config-file projects/AISFormer/configs/KINS2020/aisformer_R101_FPN_kins2020_6ep_bs1.yaml --num-gpus 1 \
+
+#python projects/AISFormer/train_net.py --config-file projects/AISFormer/configs/COCOA/aisformer_R101_FPN_cocoa_8ep_bs2.yaml --num-gpus 1 \
+
+#python projects/AISFormer/train_net.py --config-file projects/AISFormer/configs/COCOA-cls/aisformer_R50_FPN_cocoa_cls_8ep_bs2.yaml --num-gpus 1 \
