@@ -51,6 +51,9 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
             # bbox can create index too, but if iou_type segm, they pop it out
             # it's in the loadRes method in coco.py
 
+        if not results.has("pred_visible_masks"):
+            results.pred_visible_masks = results.pred_amodal_masks
+
     if results.has("pred_visible_masks"):
         results.pred_visible_masks = paste_masks_in_image(
             results.pred_visible_masks[:, 0, :, :],  # N, 1, M, M
