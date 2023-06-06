@@ -1,4 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+import torch
 from torch.nn import functional as F
 
 from detectron2.layers import paste_masks_in_image
@@ -37,6 +38,8 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
     output_boxes.clip(results.image_size)
 
     results = results[output_boxes.nonempty()]
+    check_tensor = None
+
 
     if results.has("pred_amodal_masks"):
         results.pred_amodal_masks = paste_masks_in_image(
@@ -45,14 +48,7 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
             results.image_size,
             threshold=mask_threshold,
         )
-        if not results.has("pred_masks"):
-            results.pred_masks = results.pred_amodal_masks # this is for coco evaluation to work
-            # since it needs a pred_masks in prediction for coco api to create index
-            # bbox can create index too, but if iou_type segm, they pop it out
-            # it's in the loadRes method in coco.py
-
-        if not results.has("pred_visible_masks"):
-            results.pred_visible_masks = results.pred_amodal_masks
+        check_tensor = results.pred_amodal_masks
 
     if results.has("pred_visible_masks"):
         results.pred_visible_masks = paste_masks_in_image(
@@ -61,19 +57,28 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
             results.image_size,
             threshold=mask_threshold,
         )
+        check_tensor = results.pred_visible_masks
 
 
-    if results.has("pred_masks") and not results.has('pred_amodal_masks'): # maskrcnn cases
+    if results.has("pred_masks"): # maskrcnn cases
         results.pred_masks = paste_masks_in_image(
             results.pred_masks[:, 0, :, :],  # N, 1, M, M
             results.pred_boxes,
             results.image_size,
             threshold=mask_threshold,
         )
-        if not results.has("pred_amodal_masks"):
-            results.pred_amodal_masks = results.pred_masks
-        if not results.has("pred_visible_masks"):
-            results.pred_visible_masks = results.pred_masks
+        check_tensor = results.pred_masks
+
+    assert check_tensor is not None, "No mask tensor found in results"
+    
+    if not results.has('pred_amodal_masks'):
+        results.pred_amodal_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
+
+    if not results.has('pred_visible_masks'):
+        results.pred_visible_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
+
+    if not results.has('pred_masks'):
+        results.pred_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
 
 
     return results
