@@ -26,6 +26,45 @@ __all__= ["AISFormer"]
 
 @ROI_MASK_HEAD_REGISTRY.register()
 class AISFormer(nn.Module):
+    @staticmethod
+    def _init_roi_feature_learner(conv_dim, n_layers, upsample=True):
+        '''
+        this module enrich the CxHxW roi feature with convolutional layers
+        the obtained feature will be Cx2Hx2W
+        this is quite the same as the mask rcnn mask head in detectron2
+        '''
+        modules = []
+        for i in range(n_layers):
+            modules.append(
+                Conv2d(conv_dim, conv_dim, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), activation=nn.ReLU())
+            )
+
+        if upsample:
+            modules.extend([
+                ConvTranspose2d(conv_dim, conv_dim, kernel_size=(2, 2), stride=(2, 2)),
+                nn.ReLU(),
+            ])
+
+        modules.append(
+            Conv2d(conv_dim, conv_dim, kernel_size=(1, 1), stride=(1, 1))
+        )
+
+        module_seq = nn.Sequential(*modules)
+
+        # init weights
+        for i in range(len(module_seq)):
+            if i < n_layers:
+                weight_init.c2_msra_fill(module_seq[i])
+
+        if upsample:
+            weight_init.c2_msra_fill(module_seq[n_layers])
+
+        nn.init.normal_(module_seq[-1].weight, std=0.001)
+        if module_seq[-1].bias is not None:
+            nn.init.constant_(module_seq[-1].bias, 0)
+
+        return module_seq
+
     @configurable
     def __init__(self, input_shape: ShapeSpec, *, vis_period=0, aisformer=None, **kwargs):
         super().__init__()
@@ -33,22 +72,11 @@ class AISFormer(nn.Module):
         self.aisformer = aisformer
         self.vis_period = vis_period
 
-        # deconv
-        self.deconv_for_TR = nn.Sequential(
-                nn.ConvTranspose2d(conv_dim, conv_dim, kernel_size=(2, 2), stride=(2, 2)),
-                nn.ReLU()
-            )
-        weight_init.c2_msra_fill(self.deconv_for_TR[0])
-
-        # feature map fcn
-        self.mask_feat_learner_TR = Conv2d(conv_dim, conv_dim, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), activation=nn.ReLU())
-        weight_init.c2_msra_fill(self.mask_feat_learner_TR)
+        # deconv short range learning
+        self.mask_feat_learner_TR = self._init_roi_feature_learner(conv_dim, 8, upsample=True)
 
         # pixel embedding
-        self.pixel_embed = nn.Conv2d(conv_dim, conv_dim, kernel_size=(1, 1), stride=(1, 1))
-        nn.init.normal_(self.pixel_embed.weight, std=0.001)
-        if self.pixel_embed.bias is not None:
-            nn.init.constant_(self.pixel_embed.bias, 0)
+        self.pixel_embed = self._init_roi_feature_learner(conv_dim, 8, upsample=False)
 
         # mask embedding
         emb_dim = self.aisformer.EMB_DIM
@@ -250,7 +278,6 @@ class AISFormer(nn.Module):
 
         # short range learning
         x = self.mask_feat_learner_TR(x)
-        x = self.deconv_for_TR(x)
         x_short = x.clone()
 
         # position emb
@@ -304,9 +331,9 @@ class AISFormer(nn.Module):
 
             return {
                 "loss_vi_mask": loss_vi_mask,
-                "loss_bo_mask": loss_bo_mask * 0.25,
+                "loss_bo_mask": loss_bo_mask,
                 "loss_a_mask": loss_a_mask,
-                "loss_invisible_mask": loss_invisible_mask * 0.25
+                "loss_invisible_mask": loss_invisible_mask
             }
         else:
             ## Inference forward
