@@ -342,7 +342,7 @@ class AmodalInstanceEvaluator(DatasetEvaluator):
 
         metrics = {
             "bbox": ["AP", "AP50", "AP75", "APs", "APm", "APl"],
-            "segm": ["AP", "AP50", "AP75", "APs", "APm", "APl"],
+            "segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "visible_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "amodal_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "keypoints": ["AP", "AP50", "AP75", "APm", "APl"],
