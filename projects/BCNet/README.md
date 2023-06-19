@@ -18,6 +18,7 @@ All configs can be trained with:
 ```bash
 python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.yaml --num-gpus 1
 ```
+As this repository primarily deals with amodal segmentation, we don't have the training configuration for training BCNet on COCO dataset. However, it can be easily achieved by making modifications to the forward pass of the mask head.
 
 ## Evaluation
 Model evaluation can be done as follows:
@@ -27,29 +28,5 @@ python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.y
 ```
 
 ## Pretrained Models
+Coming soon
 
-### KINS2020 Dataset
-| Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
-|-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
-|[BCNet](configs/KINS2020/bcnet_R50_FPN_kins2020_6ep_bs1.yaml)|Resnet-50|~6|...|...|-|[model]()|
-|[BCNet](configs/KINS2020/bcnet_R101_FPN_kins2020_6ep_bs1.yaml)|Resnet-101|~6|...|...|-|[model]()|
-
-
-### D2SA Dataset
-| Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
-|-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
-|[BCNet](configs/D2SA/bcnet_R50_FPN_d2sa_18ep_bs2.yaml)|Resnet-50|~18|...|...|-|[model]()|
-
-### COCOA Dataset
-COCOA No stuff, no class dataset
-
-| Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
-|-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
-|[BCNet](configs/COCOA/bcnet_R101_FPN_cocoa_8ep_bs2.yaml)|Resnet-101|~8|...|...|-|[model]()|
-
-### COCOA-cls Dataset
-COCOA with classes
-
-| Name | Backbone | epochs |AP|AR|Visible AP| Trained model |
-|-------|:---:|:-------:|:-------:|:-------:|:-------:|:-------:|
-|[BCNet](configs/COCOA-cls/bcnet_R50_FPN_cocoa_cls_8ep_bs2.yaml)|Resnet-50|~8|...|...|-|[model]()|
