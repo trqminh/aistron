@@ -13,6 +13,9 @@ If a method provides both `pred_visible_masks` and `pred_amodal_masks` in its pr
 both performances will be computed. If only the conventional `pred_masks` are provided, 
 only the amodal performance is computed.
 
+- Utilities: We offer an amodal visualizer utility that allows you to visualize the ground truth or predictions with
+option to choose between visible masks, occluder masks and amodal masks. 
+
 - Builtin-Methods:
     - [x] [MaskRCNN](./aistron/modeling/meta_arch/amodal_rcnn.py)
 
@@ -36,5 +39,6 @@ See [installation instructions](docs/INSTALL.md).
 This project is released under the [Apache 2.0 license](./LICENSE).
 
 ## Acknowledgements
-- We refer to [BCNet](https://github.com/lkeab/BCNet) for dataset mapping with occluder, [VRSP-Net](https://github.com/YutingXiao/Amodal-Segmentation-Based-on-Visible-Region-Segmentation-and-Shape-Prior) for amodal evaluation.
+- We refer to [BCNet](https://github.com/lkeab/BCNet) for dataset mapping with occluder,
+[VRSP-Net](https://github.com/YutingXiao/Amodal-Segmentation-Based-on-Visible-Region-Segmentation-and-Shape-Prior) for amodal evaluation.
 - We base on and detectron2, Mask2Former, and detrex on designing this project.
