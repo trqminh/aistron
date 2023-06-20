@@ -6,7 +6,8 @@ AIStron is an open-source toolbox that provides current Amodal Instance Segmenta
 
 Major features:
 - Data pipeline: We aim to standardize the annotations of existing AIS datasets 
-so that the methods can be easily implemented and generalized. This diagram illustrates the data pipeline of aistron
+so that the methods can be easily implemented and generalized. This [diagram](assets/doc_imgs/aistron_figures-data_pipeline.png) 
+illustrates the data pipeline of aistron
 
 - Amodal Instance Segmentation Evaluator: AIStron helps compute the performance of both visible and amodal masks. 
 If a method provides both `pred_visible_masks` and `pred_amodal_masks` in its predictions,
