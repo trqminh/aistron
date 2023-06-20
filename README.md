@@ -1,27 +1,40 @@
 <img src="./assets/aistron_logo.svg" width = "320" height = "110" alt="logo" />
 
-## 1. Introduction
+## Introduction
 
-AIStron is an amodal instance segmentation (AIS) library that provides current AIS methods. The library is built as a detectron2 (version 0.6) project. This repository works with Pytorch 1.10+ or higher.
+AIStron is an open-source toolbox that provides current Amodal Instance Segmentation (AIS) methods. It is built as a project using detectron2 (version 0.6) and requires PyTorch 1.10+ or higher. The goal of AIStron is to combine the features of various AIS repositories and align them to facilitate easy maintenance and development of new methods.
 
 Major features:
-aistron provides the following features, note that the features are mostly collected from other AIS repositories (we add the credit to the specific repository). We simply put all this together for better maintaining and developing new methods.
-- Data pipeline: 
+- Data pipeline: We aim to standardize the annotations of existing AIS datasets 
+so that the methods can be easily implemented and generalized. This diagram illustrates the data pipeline of aistron
 
-- Amodal Instance Segmentation Evalutor:
+- Amodal Instance Segmentation Evaluator: AIStron helps compute the performance of both visible and amodal masks. 
+If a method provides both `pred_visible_masks` and `pred_amodal_masks` in its predictions,
+both performances will be computed. If only the conventional `pred_masks` are provided, 
+only the amodal performance is computed.
 
-- Methods:
-    - [] [MaskRCNN]()
-    - [] [VRSP-Net]()
-    - [] [BCNet]()
-    - [] [AISFormer]()
+- Builtin-Methods:
+    - [x] [MaskRCNN](./aistron/modeling/meta_arch/amodal_rcnn.py)
 
+- Methods using aistron as library:
+    - [x] [BCNet](./projects/BCNet/)
+    - [x] [AISFormer](./projects/AISFormer/)
+    - [ ] [ORCNN](./projects/ORCNN/)
+    - [ ] [VRSP-Net](./projects/VRSP-Net/)
 
-## 2. Installation
+## News
+- v0.1.0 was released on Jun 19, 2023
+
+## Installation
 See [installation instructions](docs/INSTALL.md).
 
-## 3. Getting Started
-See [Preparing Datasets for aistron](datasets/README.md).
+## Getting Started
+- See [Getting Started with aistron](docs/GETTING_STARTED.md).
+- See [Preparing Datasets for aistron](datasets/README.md).
 
-See [Getting Started with aistron](docs/GETTING_STARTED.md).
+## License
+This project is released under the [Apache 2.0 license](./LICENSE).
 
+## Acknowledgements
+- We refer to [BCNet](https://github.com/lkeab/BCNet) for dataset mapping with occluder, [VRSP-Net](https://github.com/YutingXiao/Amodal-Segmentation-Based-on-Visible-Region-Segmentation-and-Shape-Prior) for amodal evaluation.
+- We base on and detectron2, Mask2Former, and detrex on designing this project.
