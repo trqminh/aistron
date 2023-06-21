@@ -4,7 +4,8 @@ Minh Tran, Khoa Vo, Kashu Yamazaki, Arthur Fernandes, Michael Kidd, Ngan Le
 
 [[`Arxiv`](https://arxiv.org/pdf/2210.06323.pdf)] [[`Original Github`](https://github.com/UARK-AICV/AISFormer)]
 
-![image](https://github.com/trqminh/aistron/assets/30286786/7f84b50d-12bc-4f8d-8507-2b0eb14519e9)
+![image](https://github.com/trqminh/aistron/assets/30286786/0ecaf431-4291-4956-b2cd-f46274dd6091)
+
 
 In this repository, we aim to replicate AISFormer in aistron, 
 using the original AISFormer [code](https://github.com/UARK-AICV/AISFormer) as our reference. 
