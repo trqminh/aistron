@@ -1,1 +1,1 @@
-from . import meta_arch
+from .meta_arch import GeneralizedRCNNAmodal

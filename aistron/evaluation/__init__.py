@@ -1,1 +1,2 @@
 from .amodal_evaluation import AmodalInstanceEvaluator
+from .amodal_cocoeval import AmodalCOCOeval
