@@ -13,7 +13,9 @@
     - scikit-image
     - timm==0.4.12
     - setuptools==59.5.0
-- For using aistron as a third-party library: `python -m pip install -e .`
+- For using aistron as a third-party library: 
+    - Stable version: `pip install git+https://github.com/trqminh/aistron@v0.1.0`
+    - Current development: `pip install git+https://github.com/trqminh/aistron`
 
 ### Example conda environment setup
 ```bash
@@ -37,7 +39,5 @@ pip install timm==0.4.12
 pip install setuptools==59.5.0
 
 # aistron
-git clone https://github.com/trqminh/aistron.git
-cd aistron/
-python -m pip install -e .
+pip install git+https://github.com/trqminh/aistron@v0.1.0
 ```
