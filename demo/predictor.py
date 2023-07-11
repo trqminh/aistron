@@ -36,7 +36,7 @@ class VisualizationDemo(object):
         else:
             self.predictor = DefaultPredictor(cfg)
 
-    def run_on_image(self, image):
+    def run_on_image(self, image, segm_type='amodal'):
         """
         Args:
             image (np.ndarray): an image of shape (H, W, C) (in BGR order).
@@ -63,7 +63,7 @@ class VisualizationDemo(object):
                 )
             if "instances" in predictions:
                 instances = predictions["instances"].to(self.cpu_device)
-                vis_output = visualizer.draw_instance_predictions(predictions=instances)
+                vis_output = visualizer.draw_instance_predictions(predictions=instances, segm_type=segm_type)
 
         return predictions, vis_output
 

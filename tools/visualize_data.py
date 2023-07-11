@@ -37,7 +37,7 @@ def parse_args(in_args=None):
     parser.add_argument("--output-dir", default="./", help="path to output directory")
     parser.add_argument("--show", action="store_true", help="show output in a window")
     parser.add_argument("--dataset-name", default="None", help="data split to visualize")
-    parser.add_argument("--option", default="amodal", help="opt for visualization types (e.g. amodal, visible,..)")
+    parser.add_argument("--segm_type", default="amodal", help="opt for visualization types (e.g. amodal, visible,..)")
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
@@ -93,5 +93,5 @@ if __name__ == "__main__":
         for dic in tqdm.tqdm(dicts):
             img = utils.read_image(dic["file_name"], "RGB")
             visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale)
-            vis = visualizer.draw_dataset_dict(dic, option=args.option)
+            vis = visualizer.draw_dataset_dict(dic, segm_type=args.segm_type)
             output(vis, os.path.basename(dic["file_name"]))

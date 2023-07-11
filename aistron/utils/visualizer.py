@@ -6,18 +6,18 @@ from detectron2.structures import BitMasks, Boxes, BoxMode, Keypoints, PolygonMa
 class AmodalVisualizer(Visualizer):
     """
     """
-    def draw_dataset_dict(self, dic, option='amodal'):
+    def draw_dataset_dict(self, dic, segm_type='amodal'):
         """
         Draw annotations/segmentaions in Detectron2 Dataset format.
         Args:
             dic (dict): annotation/segmentation data of one image, in Detectron2 Dataset format.
-            options could be: ['amodal', 'visible']
+            segm_type options could be: ['amodal', 'visible']
         Returns:
             output (VisImage): image object with visualizations.
         """
         annos = dic.get("annotations", None)
         if annos:
-            if option == 'amodal':
+            if segm_type == 'amodal':
                 if "amodal_segm" in annos[0]:
                     masks = [x["amodal_segm"] for x in annos]
                 else:
@@ -29,7 +29,7 @@ class AmodalVisualizer(Visualizer):
                     for x in annos
                 ]
 
-            elif option == 'visible':
+            elif segm_type == 'visible':
                 if "visible_segm" in annos[0]:
                     masks = [x["visible_segm"] for x in annos]
                 else:
@@ -41,7 +41,7 @@ class AmodalVisualizer(Visualizer):
                     for x in annos
                 ]
 
-            elif option == 'background_objs':
+            elif segm_type == 'background_objs':
                 if "background_objs_segm" in annos[0]:
                     masks = [x["background_objs_segm"] for x in annos]
                 else:
@@ -92,7 +92,7 @@ class AmodalVisualizer(Visualizer):
 
         return self.output
 
-    def draw_instance_predictions(self, predictions):
+    def draw_instance_predictions(self, predictions, segm_type='amodal'):
         """
         Draw instance-level prediction results on an image.
 
@@ -110,14 +110,20 @@ class AmodalVisualizer(Visualizer):
         labels = _create_text_labels(classes, scores, self.metadata.get("thing_classes", None))
         keypoints = predictions.pred_keypoints if predictions.has("pred_keypoints") else None
 
-        if predictions.has("pred_amodal_masks"):
-            masks = np.asarray(predictions.pred_amodal_masks)
+        if segm_type == 'amodal':
+            if predictions.has("pred_amodal_masks"):
+                masks = np.asarray(predictions.pred_amodal_masks)
+                masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
+            elif predictions.has("pred_masks"):
+                masks = np.asarray(predictions.pred_masks)
+                masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
+            else:
+                masks = None
+        elif segm_type == 'visible':
+            assert predictions.has("pred_visible_masks"), "No visible masks!"
+            masks = np.asarray(predictions.pred_visible_masks)
             masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
-        elif predictions.has("pred_masks"):
-            masks = np.asarray(predictions.pred_masks)
-            masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
-        else:
-            masks = None
+
 
         if self._instance_mode == ColorMode.SEGMENTATION and self.metadata.get("thing_colors"):
             colors = [

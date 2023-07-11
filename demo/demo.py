@@ -15,7 +15,8 @@ from detectron2.data.detection_utils import read_image
 from detectron2.utils.logger import setup_logger
 
 from predictor import VisualizationDemo
-from aistron.projects.aisformer import add_aisformer_config
+from aistron.projects.bcnet import BCNet
+from aistron.projects.aisformer import AISFormer, add_aisformer_config
 
 # constants
 WINDOW_NAME = "COCO detections"
@@ -72,6 +73,11 @@ def get_parser():
         default=[],
         nargs=argparse.REMAINDER,
     )
+    parser.add_argument(
+        "--segm_type", 
+        default="amodal", 
+        help="opt for visualization types (e.g. amodal, visible,..)"
+    )
     return parser
 
 
@@ -111,7 +117,7 @@ if __name__ == "__main__":
             # use PIL, to be consistent with evaluation
             img = read_image(path, format="BGR")
             start_time = time.time()
-            predictions, visualized_output = demo.run_on_image(img)
+            predictions, visualized_output = demo.run_on_image(img, args.segm_type)
             logger.info(
                 "{}: {} in {:.2f}s".format(
                     path,
