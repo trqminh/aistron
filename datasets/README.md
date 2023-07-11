@@ -128,14 +128,14 @@ Run the following command to overlay instance groundtruths on top of the images 
 
 ```bash
 export AISTRON_DATASETS=../data/datasets/
-output_dir=../data/outtest/aistron_viz_gt_test_kins/ # directory to output the visualize images 
+output_dir=../data/viz/aistron_viz_gt_test_kins/ # directory to output the visualize images 
 dataset_name=kins_train # kins2020_train, d2sa_train, or your_custom_datasets_name
-option=amodal # or visible (the mode of the visualized masks)
+segm_type=amodal # or visible (the mode of the visualized masks)
 
 python tools/visualize_data.py \
     --output-dir ${output_dir} \
     --dataset-name ${dataset_name} \
-    --option ${option} \
+    --segm_type ${segm_type} \
     --source "annotation" \
 
 ```

@@ -10,7 +10,8 @@ This document provides a brief intro of the usage of aistron
 ```bash
 python demo/demo.py --config-file configs/KINS2020/maskrcnn_R50_FPN_kins2020_6ep_bs1.yaml \
   --input input1.jpg input2.jpg \
-  --output demo_output.jpg
+  --output demo_output.jpg \
+  --segm_type amodal \ # visible or amodal
   [--other-options]
   --opts MODEL.WEIGHTS /path/to/checkpoint_file
 ```
