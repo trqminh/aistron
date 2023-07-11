@@ -14,12 +14,14 @@ using the original AISFormer [code](https://github.com/UARK-AICV/AISFormer) as o
 ## Training
 All configs can be trained with:
 ```bash
+export AISTRON_DATASETS=/path/to/datasets/
 python projects/AISFormer/train_net.py --config-file projects/AISFormer/path/to/config.yaml --num-gpus 1
 ```
 
 ## Evaluation
 Model evaluation can be done as follows:
 ```bash
+export AISTRON_DATASETS=/path/to/datasets/
 python projects/AISFormer/train_net.py --config-file projects/AISFormer/path/to/config.yaml \
     --eval-only MODEL.WEIGHTS /path/to/the/model/weight.pth
 ```

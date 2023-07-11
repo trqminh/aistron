@@ -16,6 +16,7 @@ We encourage and welcome pull requests from the community.
 ## Training
 All configs can be trained with:
 ```bash
+export AISTRON_DATASETS=/path/to/datasets/
 python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.yaml --num-gpus 1
 ```
 As this repository primarily deals with amodal segmentation, we don't have the training configuration for training BCNet on COCO dataset. However, it can be easily achieved by making modifications to the forward pass of the mask head.
@@ -23,6 +24,7 @@ As this repository primarily deals with amodal segmentation, we don't have the t
 ## Evaluation
 Model evaluation can be done as follows:
 ```bash
+export AISTRON_DATASETS=/path/to/datasets/
 python projects/BCNet/train_net.py --config-file projects/BCNet/path/to/config.yaml \
     --eval-only MODEL.WEIGHTS /path/to/the/model/weight.pth
 ```
