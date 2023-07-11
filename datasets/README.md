@@ -132,7 +132,7 @@ output_dir=../data/outtest/aistron_viz_gt_test_kins/ # directory to output the v
 dataset_name=kins_train # kins2020_train, d2sa_train, or your_custom_datasets_name
 option=amodal # or visible (the mode of the visualized masks)
 
-python visualize_data.py \
+python tools/visualize_data.py \
     --output-dir ${output_dir} \
     --dataset-name ${dataset_name} \
     --option ${option} \

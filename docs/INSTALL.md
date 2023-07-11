@@ -14,8 +14,8 @@
     - timm==0.4.12
     - setuptools==59.5.0
 - For using aistron as a third-party library: 
-    - Stable version: `pip install git+https://github.com/trqminh/aistron@v0.1.0`
     - Current development: `pip install git+https://github.com/trqminh/aistron`
+    - Release version: `pip install git+https://github.com/trqminh/aistron@v0.1.1`
 
 ### Example conda environment setup
 ```bash
@@ -39,5 +39,5 @@ pip install timm==0.4.12
 pip install setuptools==59.5.0
 
 # aistron
-pip install git+https://github.com/trqminh/aistron@v0.1.0
+pip install git+https://github.com/trqminh/aistron
 ```
