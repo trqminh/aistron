@@ -75,10 +75,14 @@ class AmodalVisualizer(Visualizer):
             colors = None
             category_ids = [x["category_id"] for x in annos]
             if self._instance_mode == ColorMode.SEGMENTATION and self.metadata.get("thing_colors"):
+                # colors = [
+                #     self._jitter([x / 255 for x in self.metadata.thing_colors[c]])
+                #     for c in category_ids
+                # ]
                 colors = [
-                    self._jitter([x / 255 for x in self.metadata.thing_colors[c]])
-                    for c in category_ids
+                    [x / 255 for x in self.metadata.thing_colors[c]] for c in category_ids
                 ]
+                alpha = 0.80
             names = self.metadata.get("thing_classes", None)
             labels = _create_text_labels(
                 category_ids,
@@ -86,8 +90,10 @@ class AmodalVisualizer(Visualizer):
                 class_names=names,
                 is_crowd=[x.get("iscrowd", 0) for x in annos],
             )
+            boxes = None
+            labels = None
             self.overlay_instances(
-                labels=labels, boxes=boxes, masks=masks, keypoints=keypts, assigned_colors=colors
+                labels=labels, boxes=boxes, masks=masks, keypoints=keypts, assigned_colors=colors, alpha=alpha
             )
 
         return self.output
@@ -126,8 +132,11 @@ class AmodalVisualizer(Visualizer):
 
 
         if self._instance_mode == ColorMode.SEGMENTATION and self.metadata.get("thing_colors"):
+            # colors = [
+            #     self._jitter([x / 255 for x in self.metadata.thing_colors[c]]) for c in classes
+            # ]
             colors = [
-                self._jitter([x / 255 for x in self.metadata.thing_colors[c]]) for c in classes
+                [x / 255 for x in self.metadata.thing_colors[c]] for c in classes
             ]
             alpha = 0.8
         else:
@@ -144,6 +153,8 @@ class AmodalVisualizer(Visualizer):
             )
             alpha = 0.3
 
+        boxes = None
+        labels = None
         self.overlay_instances(
             masks=masks,
             boxes=boxes,

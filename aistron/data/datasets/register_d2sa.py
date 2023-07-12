@@ -370,6 +370,13 @@ def register_d2sa(root):
         join(root, "D2SA/d2s_amodal_images_v1/images/"),
     )
 
+    register_aistron_cocolike_instances(
+        "d2sa_selected",
+        _get_d2sa_instances_meta(D2SA_CATEGORIES),
+        join(root, "D2SA/d2s_amodal_annotations_v1/D2S_amodal_validation_aistron.json"),
+        join(root, "D2SA/selected_images/"),
+    )
+
 
 _root = os.getenv("AISTRON_DATASETS", "datasets")
 register_d2sa(_root)

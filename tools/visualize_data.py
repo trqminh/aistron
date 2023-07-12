@@ -92,7 +92,10 @@ if __name__ == "__main__":
         if cfg.MODEL.KEYPOINT_ON:
             dicts = filter_images_with_few_keypoints(dicts, 1)
         for dic in tqdm.tqdm(dicts):
-            img = utils.read_image(dic["file_name"], "RGB")
-            visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale, instance_mode=ColorMode.SEGMENTATION)
-            vis = visualizer.draw_dataset_dict(dic, segm_type=args.segm_type)
-            output(vis, os.path.basename(dic["file_name"]))
+            try:
+                img = utils.read_image(dic["file_name"], "RGB")
+                visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale, instance_mode=ColorMode.SEGMENTATION)
+                vis = visualizer.draw_dataset_dict(dic, segm_type=args.segm_type)
+                output(vis, os.path.basename(dic["file_name"]))
+            except:
+                pass
