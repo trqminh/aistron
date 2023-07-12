@@ -12,6 +12,7 @@ from detectron2.data import detection_utils as utils
 from detectron2.data.build import filter_images_with_few_keypoints
 from detectron2.utils.logger import setup_logger
 from aistron.utils.visualizer import AmodalVisualizer
+from detectron2.utils.visualizer import ColorMode
 
 import aistron # register aistron builtin functions (e.g. registering datasets)
 
@@ -92,6 +93,6 @@ if __name__ == "__main__":
             dicts = filter_images_with_few_keypoints(dicts, 1)
         for dic in tqdm.tqdm(dicts):
             img = utils.read_image(dic["file_name"], "RGB")
-            visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale)
+            visualizer = AmodalVisualizer(img, metadata=metadata, scale=scale, instance_mode=ColorMode.SEGMENTATION)
             vis = visualizer.draw_dataset_dict(dic, segm_type=args.segm_type)
             output(vis, os.path.basename(dic["file_name"]))
