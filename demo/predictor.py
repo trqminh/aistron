@@ -15,7 +15,7 @@ from aistron.utils.visualizer import AmodalVisualizer
 
 
 class VisualizationDemo(object):
-    def __init__(self, cfg, instance_mode=ColorMode.IMAGE, parallel=False):
+    def __init__(self, cfg, instance_mode=ColorMode.SEGMENTATION, parallel=False):
         """
         Args:
             cfg (CfgNode):
