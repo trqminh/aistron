@@ -83,6 +83,28 @@ class AmodalVisualizer(Visualizer):
                     [x / 255 for x in self.metadata.thing_colors[c]] for c in category_ids
                 ]
                 alpha = 0.80
+
+                '''
+                custom_color = [
+                    [255, 0, 0],        ## Red
+                    [255, 0, 255],      ## Fuchsia
+                    [0, 0, 255],        ## Blue
+                    [0, 255, 255],      ## Aqua
+                    [0, 255, 0],        ## Lime
+                    [255, 255, 0],      ## Yellow
+
+                    [180, 0, 255],       ## Purple
+                    [255, 0, 140],       ## Pink
+                    [0, 255, 140],       ## Spring Green
+                    [140, 255, 0],       ## Chartreuse
+                    [255, 140, 0],       ## Orange
+                    [57, 197, 187]       ## Miku
+                ]
+                c_list = list(range(len(category_ids)))
+                colors = [ [x / 255 for x in custom_color[c%len(custom_color)]] for c in c_list ]
+                alpha = 0.7
+                '''
+
             names = self.metadata.get("thing_classes", None)
             labels = _create_text_labels(
                 category_ids,
@@ -139,6 +161,26 @@ class AmodalVisualizer(Visualizer):
                 [x / 255 for x in self.metadata.thing_colors[c]] for c in classes
             ]
             alpha = 0.8
+            '''
+            custom_color = [
+                [255, 0, 0],        ## Red
+                [255, 0, 255],      ## Fuchsia
+                [0, 0, 255],        ## Blue
+                [0, 255, 255],      ## Aqua
+                [0, 255, 0],        ## Lime
+                [255, 255, 0],      ## Yellow
+
+                [180, 0, 255],       ## Purple
+                [255, 0, 140],       ## Pink
+                [0, 255, 140],       ## Spring Green
+                [140, 255, 0],       ## Chartreuse
+                [255, 140, 0],       ## Orange
+                [57, 197, 187]       ## Miku
+            ]
+            c_list = list(range(len(classes)))
+            colors = [ [x / 255 for x in custom_color[c%len(custom_color)]] for c in c_list ]
+            alpha = 0.7
+            '''
         else:
             colors = None
             alpha = 0.5

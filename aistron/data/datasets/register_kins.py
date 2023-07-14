@@ -61,6 +61,11 @@ def register_kins2020(root):
         join(root, "KINS/testing/image_2/")
     )
 
+    register_aistron_cocolike_instances("kins2020_selected", _get_kins_instances_meta(KINS2020_CATEGORIES),
+        join(root, "KINS/annotations/update_test_2020_aistron.json"),
+        join(root, "KINS/selected_images")
+    )
+
 def register_kins(root):
     register_aistron_cocolike_instances("kins_train", _get_kins_instances_meta(KINS_CATEGORIES),
         join(root, "KINS/annotations/instances_train_aistron.json"),
