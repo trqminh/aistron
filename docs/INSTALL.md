@@ -2,16 +2,16 @@
 
 ### Requirements
 - Linux with Python ≥ 3.6
-- PyTorch ≥ 1.10 and [torchvision](https://github.com/pytorch/vision/) that matches the PyTorch installation.
+- PyTorch ≥ 1.8 and [torchvision](https://github.com/pytorch/vision/) that matches the PyTorch installation.
   Install them together at [pytorch.org](https://pytorch.org) to make sure of this. Note, please check
   PyTorch version matches that is required by Detectron2.
 - Detectron2: follow [Detectron2 installation instructions](https://detectron2.readthedocs.io/tutorials/install.html).
 - Other requirements:
     - ninja yacs cython matplotlib tqdm shapely
-    - opencv-python==4.4.0.40
+    - opencv-python
     - sklearn
     - scikit-image
-    - timm==0.4.12
+    - timm
     - setuptools==59.5.0
 - For using aistron as a third-party library: 
     - Current development: `pip install git+https://github.com/trqminh/aistron`

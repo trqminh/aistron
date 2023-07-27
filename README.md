@@ -2,7 +2,7 @@
 
 ## Introduction
 
-AIStron is an open-source toolbox that provides current Amodal Instance Segmentation (AIS) methods. It is built as a project using detectron2 (version 0.6) and requires PyTorch 1.10+ or higher. The goal of AIStron is to combine the features of various AIS repositories and align them to facilitate easy maintenance and development of new methods.
+AIStron is an open-source toolbox that provides current Amodal Instance Segmentation (AIS) methods. It is built as a project using detectron2 (version 0.6) and requires PyTorch 1.8+ or higher. The goal of AIStron is to combine the features of various AIS repositories and align them to facilitate easy maintenance and development of new methods.
 
 ![alt text](assets/demo_examples/kins_example_prediction.png "teaser")
 
@@ -45,3 +45,13 @@ This project is released under the [Apache 2.0 license](./LICENSE).
 - We refer to [BCNet](https://github.com/lkeab/BCNet) for dataset mapping with occluder,
 [VRSP-Net](https://github.com/YutingXiao/Amodal-Segmentation-Based-on-Visible-Region-Segmentation-and-Shape-Prior) for amodal evaluation.
 - We base on and detectron2, Mask2Former, and detrex on designing this project.
+## Citing aistron
+If you use aistron in your research, please consider citing this repository using the following BibTeX entry.
+```BibTeX
+@misc{tran2023aistron,
+  author =       {Minh Tran},
+  title =        {Amodal Instance Segmentation Toolbox and Benchmark},
+  howpublished = {\url{https://github.com/trqminh/aistron}},
+  year =         {2023}
+}
+```
