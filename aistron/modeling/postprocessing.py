@@ -59,6 +59,23 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
         )
         check_tensor = results.pred_visible_masks
 
+    if results.has("pred_occluding_masks"):
+        results.pred_occluding_masks = paste_masks_in_image(
+            results.pred_occluding_masks[:, 0, :, :],  # N, 1, M, M
+            results.pred_boxes,
+            results.image_size,
+            threshold=mask_threshold,
+        )
+        check_tensor = results.pred_occluding_masks
+
+    if results.has("pred_occluded_masks"):
+        results.pred_occluded_masks = paste_masks_in_image(
+            results.pred_occluded_masks[:, 0, :, :],  # N, 1, M, M
+            results.pred_boxes,
+            results.image_size,
+            threshold=mask_threshold,
+        )
+        check_tensor = results.pred_occluded_masks
 
     if results.has("pred_masks"): # maskrcnn cases
         results.pred_masks = paste_masks_in_image(
@@ -76,6 +93,12 @@ def detector_postprocess(results, output_height, output_width, mask_threshold=0.
 
     if not results.has('pred_visible_masks'):
         results.pred_visible_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
+
+    if not results.has('pred_occluding_masks'):
+        results.pred_occluding_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
+
+    if not results.has('pred_occluded_masks'):
+        results.pred_occluded_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
 
     if not results.has('pred_masks'):
         results.pred_masks = torch.zeros_like(check_tensor, dtype=torch.bool)
