@@ -60,7 +60,7 @@ class GeneralizedRCNNAmodal(GeneralizedRCNN):
 
         if do_postprocess:
             assert not torch.jit.is_scripting(), "Scripting is not supported for postprocess."
-            return GeneralizedRCNNAmodal._postprocess(results, batched_inputs, images.image_sizes)
+            return self._postprocess(results, batched_inputs, images.image_sizes)
         return results
 
     @staticmethod
