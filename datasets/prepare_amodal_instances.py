@@ -6,6 +6,7 @@ import datetime
 import json
 import numpy as np
 import cv2
+import pycocotools
 from PIL import Image
 from skimage import measure
 
@@ -248,7 +249,11 @@ def process_occluder_gt_and_misc(json_file, dataset_name=None, extra_annotation_
             for index, seg in enumerate(seg_list):
                 #print('seg len:', len(seg))
                 if isinstance(seg, dict):
-                    bitmask = mask_util.decode(seg)
+                    try:
+                        bitmask = mask_util.decode(seg)
+                    except:
+                        seg = pycocotools.mask.frPyObjects(seg, seg['size'][0], seg['size'][1])
+                        bitmask = mask_util.decode(seg)
                 else:
                     invalid = False
                     for sub_seg in seg:
@@ -267,7 +272,11 @@ def process_occluder_gt_and_misc(json_file, dataset_name=None, extra_annotation_
             for index, seg in enumerate(i_seg_list):
                 #print('seg len:', len(seg))
                 if isinstance(seg, dict):
-                    bitmask = mask_util.decode(seg)
+                    try:
+                        bitmask = mask_util.decode(seg)
+                    except:
+                        seg = pycocotools.mask.frPyObjects(seg, seg['size'][0], seg['size'][1])
+                        bitmask = mask_util.decode(seg)
                 else:
                     invalid = False
                     for sub_seg in seg:
