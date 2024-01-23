@@ -340,4 +340,6 @@ class AISFormer(nn.Module):
             vi_masks, bo_masks, a_masks, invisible_masks = self.layers(x)
             self.mask_inference(vi_masks, instances, 'pred_visible_masks')
             self.mask_inference(a_masks, instances, 'pred_amodal_masks')
+            self.mask_inference(bo_masks, instances, 'pred_occluding_masks')
+            self.mask_inference(invisible_masks, instances, 'pred_occluded_masks')
             return instances
