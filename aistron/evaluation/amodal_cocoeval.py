@@ -93,12 +93,23 @@ class AmodalCOCOeval:
             """
             t = imgs[ann['image_id']]
             h, w = t['height'], t['width']
+
+            if mask_type not in ann:
+                # create a blank mask
+                blank_mask = np.zeros((h, w), dtype=np.uint8)
+                return maskUtils.encode(np.asfortranarray(blank_mask))
+
             segm = ann[mask_type]
             if type(segm) == list:
                 # polygon -- a single object might consist of multiple parts
                 # we merge all parts into one mask rle code
-                rles = maskUtils.frPyObjects(segm, h, w)
-                rle = maskUtils.merge(rles)
+                if len(segm) == 0:
+                    # empty mask
+                    blank_mask = np.zeros((h, w), dtype=np.uint8)
+                    rle = maskUtils.encode(np.asfortranarray(blank_mask))
+                else:
+                    rles = maskUtils.frPyObjects(segm, h, w)
+                    rle = maskUtils.merge(rles)
             elif type(segm['counts']) == list:
                 # uncompressed RLE
                 rle = maskUtils.frPyObjects(segm, h, w)
@@ -107,15 +118,25 @@ class AmodalCOCOeval:
                 rle = ann[mask_type]
             return rle
 
-        def _toMask(anns, coco):
+        def _toMask(anns, coco, is_dt=False):
             # modify ann['segmentation'] by reference
             for ann in anns:
                 segmentation_rle = amodal_annToRLE(ann, coco.imgs, 'segmentation')
                 amodal_segm_rle = amodal_annToRLE(ann, coco.imgs, 'amodal_segm')
                 visible_segm_rle = amodal_annToRLE(ann, coco.imgs, 'visible_segm')
+                occluded_segm_rle = amodal_annToRLE(ann, coco.imgs, 'occluded_segm')
+
+                #TODO: eliminate this hack
+                if not is_dt:
+                    occluding_segm_rle = amodal_annToRLE(ann, coco.imgs, 'occluder_segm')
+                else:
+                    occluding_segm_rle = amodal_annToRLE(ann, coco.imgs, 'occluding_segm')
+
                 ann['segmentation'] = segmentation_rle
                 ann['amodal_segm'] = amodal_segm_rle
                 ann['visible_segm'] = visible_segm_rle
+                ann['occluding_segm'] = occluding_segm_rle
+                ann['occluded_segm'] = occluded_segm_rle
         p = self.params
         if p.useCats:
             gts=self.cocoGt.loadAnns(self.cocoGt.getAnnIds(imgIds=p.imgIds, catIds=p.catIds))
@@ -125,9 +146,10 @@ class AmodalCOCOeval:
             dts=self.cocoDt.loadAnns(self.cocoDt.getAnnIds(imgIds=p.imgIds))
 
         # convert ground truth to mask if iouType == 'segm' or p.iouType == 'amodal_segm' or p.iouType == 'visible_segm'
-        if p.iouType == 'segm' or p.iouType == 'amodal_segm' or p.iouType == 'visible_segm':
+        if p.iouType == 'segm' or p.iouType == 'amodal_segm' or p.iouType == 'visible_segm'\
+                or p.iouType == 'occluding_segm' or p.iouType == 'occluded_segm':
             _toMask(gts, self.cocoGt)
-            _toMask(dts, self.cocoDt)
+            _toMask(dts, self.cocoDt, is_dt=True)
         # set ignore flag
         for gt in gts:
             gt['ignore'] = gt['ignore'] if 'ignore' in gt else 0
@@ -167,7 +189,8 @@ class AmodalCOCOeval:
         catIds = p.catIds if p.useCats else [-1]
 
         if p.iouType == 'segm' or p.iouType == 'bbox' or \
-            p.iouType == 'visible_segm' or p.iouType == 'amodal_segm':
+            p.iouType == 'visible_segm' or p.iouType == 'amodal_segm'\
+                or p.iouType == 'occluding_segm' or p.iouType == 'occluded_segm':
             computeIoU = self.computeIoU
         elif p.iouType == 'keypoints':
             computeIoU = self.computeOks
@@ -210,6 +233,12 @@ class AmodalCOCOeval:
         elif p.iouType == 'visible_segm':
             g = [g['visible_segm'] for g in gt]
             d = [d['visible_segm'] for d in dt]
+        elif p.iouType == 'occluding_segm':
+            g = [g['occluding_segm'] for g in gt]
+            d = [d['occluding_segm'] for d in dt]
+        elif p.iouType == 'occluded_segm':
+            g = [g['occluded_segm'] for g in gt]
+            d = [d['occluded_segm'] for d in dt]
         elif p.iouType == 'bbox':
             g = [g['bbox'] for g in gt]
             d = [d['bbox'] for d in dt]
@@ -518,7 +547,8 @@ class AmodalCOCOeval:
         if not self.eval:
             raise Exception('Please run accumulate() first')
         iouType = self.params.iouType
-        if iouType == 'segm' or iouType == 'bbox' or iouType == 'amodal_segm' or iouType == 'visible_segm':
+        if iouType == 'segm' or iouType == 'bbox' or iouType == 'amodal_segm' or iouType == 'visible_segm'\
+                or iouType == 'occluding_segm' or iouType == 'occluded_segm':
             summarize = _summarizeDets
         elif iouType == 'keypoints':
             summarize = _summarizeKps
@@ -556,7 +586,8 @@ class Params:
 
     def __init__(self, iouType='segm'):
         if iouType == 'segm' or iouType == 'bbox' \
-            or iouType == 'amodal_segm' or iouType == 'visible_segm':
+            or iouType == 'amodal_segm' or iouType == 'visible_segm'\
+                or iouType == 'occluding_segm' or iouType == 'occluded_segm':
             self.setDetParams()
         elif iouType == 'keypoints':
             self.setKpParams()

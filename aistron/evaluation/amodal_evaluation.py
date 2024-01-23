@@ -221,6 +221,10 @@ class AmodalInstanceEvaluator(DatasetEvaluator):
                 tasks.add("amodal_segm")
             if "visible_segm" in pred:
                 tasks.add("visible_segm")
+            if "occluding_segm" in pred:
+                tasks.add("occluding_segm")
+            if "occluded_segm" in pred:
+                tasks.add("occluded_segm")
             if "keypoints" in pred:
                 tasks.add("keypoints")
         return sorted(tasks)
@@ -267,7 +271,7 @@ class AmodalInstanceEvaluator(DatasetEvaluator):
             )
         )
         for task in sorted(tasks):
-            assert task in {"bbox", "segm", "keypoints", "amodal_segm", "visible_segm"}, f"Got unknown task: {task}!"
+            assert task in {"bbox", "segm", "keypoints", "amodal_segm", "visible_segm", "occluding_segm", "occluded_segm"}, f"Got unknown task: {task}!"
             coco_eval = (
                 _evaluate_predictions_on_coco(
                     self._coco_api,
@@ -345,6 +349,8 @@ class AmodalInstanceEvaluator(DatasetEvaluator):
             "segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "visible_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "amodal_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
+            "occluding_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
+            "occluded_segm": ["AP", "AP50", "AP75", "APs", "APm", "APl", "AR"],
             "keypoints": ["AP", "AP50", "AP75", "APm", "APl"],
         }[iou_type]
 
@@ -453,6 +459,8 @@ def instances_to_coco_json(instances, img_id):
 
     has_visible_mask, visible_rles = get_pred_mask_by_key(instances, 'pred_visible_masks')
     has_amodal_mask, amodal_rles = get_pred_mask_by_key(instances, 'pred_amodal_masks')
+    has_occluding_mask, occluding_rles = get_pred_mask_by_key(instances, 'pred_occluding_masks')
+    has_occluded_mask, occluded_rles = get_pred_mask_by_key(instances, 'pred_occluded_masks')
 
     has_keypoints = instances.has("pred_keypoints")
     if has_keypoints:
@@ -472,6 +480,10 @@ def instances_to_coco_json(instances, img_id):
             result["visible_segm"] = visible_rles[k]
         if has_amodal_mask:
             result["amodal_segm"] = amodal_rles[k]
+        if has_occluding_mask:
+            result["occluding_segm"] = occluding_rles[k]
+        if has_occluded_mask:
+            result["occluded_segm"] = occluded_rles[k]
         if has_keypoints:
             # In COCO annotations,
             # keypoints coordinates are pixel indices.
@@ -611,7 +623,8 @@ def _evaluate_predictions_on_coco(
     """
     assert len(coco_results) > 0
 
-    if iou_type == 'segm' or iou_type == 'amodal_segm' or iou_type == 'visible_segm':
+    if iou_type == 'segm' or iou_type == 'amodal_segm' or iou_type == 'visible_segm'\
+        or iou_type == 'occluding_segm' or iou_type == 'occluded_segm':
         coco_results = copy.deepcopy(coco_results)
         # When evaluating mask AP, if the results contain bbox, cocoapi will
         # use the box area as the area of the instance, instead of the mask area.
@@ -745,7 +758,8 @@ class COCOevalMaxDets(COCOeval):
         if not self.eval:
             raise Exception("Please run accumulate() first")
         iouType = self.params.iouType
-        if iouType == "segm" or iouType == "bbox" or iouType == 'amodal_segm' or iouType == 'visible_segm':
+        if iouType == "segm" or iouType == "bbox" or iouType == 'amodal_segm' or iouType == 'visible_segm'\
+            or iouType == 'occluding_segm' or iouType == 'occluded_segm':
             summarize = _summarizeDets
         elif iouType == "keypoints":
             summarize = _summarizeKps
