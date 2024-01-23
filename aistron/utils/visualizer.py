@@ -41,7 +41,7 @@ class AmodalVisualizer(Visualizer):
                     for x in annos
                 ]
 
-            elif segm_type == 'background_objs':
+            elif segm_type == 'background_objs' or 'occluding':
                 if "background_objs_segm" in annos[0]:
                     masks = [x["background_objs_segm"] for x in annos]
                 else:
@@ -122,6 +122,14 @@ class AmodalVisualizer(Visualizer):
         elif segm_type == 'visible':
             assert predictions.has("pred_visible_masks"), "No visible masks!"
             masks = np.asarray(predictions.pred_visible_masks)
+            masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
+        elif segm_type == 'occluding':
+            assert predictions.has("pred_occluding_masks"), "No occluding masks!"
+            masks = np.asarray(predictions.pred_occluding_masks)
+            masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
+        elif segm_type == 'occluded':
+            assert predictions.has("pred_occluded_masks"), "No occluded masks!"
+            masks = np.asarray(predictions.pred_occluded_masks)
             masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
 
 
