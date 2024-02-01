@@ -422,8 +422,10 @@ class BCNet(nn.Module):
             }
         else:
             # Inference forward
-            amodal_masks, _, mask_bo, _ = self.layers(x)
+            amodal_masks, amodal_bound, bo_masks, bo_bound = self.layers(x)
             self.mask_inference(amodal_masks, instances, 'pred_amodal_masks')
-            self.mask_inference(mask_bo, instances, 'pred_occluding_masks')
+            self.mask_inference(bo_masks, instances, 'pred_occluding_masks')
+            self.mask_inference(amodal_bound, instances, 'pred_amodal_boundary')
+            self.mask_inference(bo_bound, instances, 'pred_occluding_boundary')
             return instances
 
