@@ -330,11 +330,13 @@ class AmodalDatasetMapper:
         # Therefore it's important to use torch.Tensor.
         dataset_dict["image"] = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
 
+        '''
         if not self.is_train:
             # USER: Modify this if you want to keep them for some reason.
             dataset_dict.pop("annotations", None)
             dataset_dict.pop("sem_seg_file_name", None)
             return dataset_dict
+        '''
 
         if "annotations" in dataset_dict:
             self._transform_annotations(dataset_dict, transforms, image_shape)
