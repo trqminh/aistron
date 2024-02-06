@@ -320,6 +320,16 @@ class AmodalCOCOeval:
         dtind = np.argsort([-d['score'] for d in dt], kind='mergesort')
         dt = [dt[i] for i in dtind[0:maxDet]]
         iscrowd = [int(o['iscrowd']) for o in gt]
+
+        # ignore case of empty occluding or occluded mask 
+        if self.params.iouType == 'occluding_segm' or self.params.iouType == 'occluded_segm':
+            gtind = [index for index, gi in enumerate(gt) if len(gi[self.params.iouType]['counts']) > 5]
+            gt = [gi for index, gi in enumerate(gt) if index in gtind]
+            iscrowd = [ic for index, ic in enumerate(iscrowd) if index in gtind]
+
+            dtind = [index for index, di in enumerate(dt) if len(di[self.params.iouType]['counts']) > 5]
+            dt = [di for index, di in enumerate(dt) if index in dtind]
+
         # load computed ious
         ious = self.ious[imgId, catId][:, gtind] if len(self.ious[imgId, catId]) > 0 else self.ious[imgId, catId]
 
