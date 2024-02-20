@@ -15,8 +15,57 @@ from ..postprocessing import detector_postprocess
 @META_ARCH_REGISTRY.register()
 class GeneralizedRCNNAmodal(GeneralizedRCNN):
     @configurable
-    def __init__(self, *, init_value=None, **kwargs):
+    def __init__(self, *, init_value=None, inference_with_gt_boxes=False, **kwargs):
         super().__init__(**kwargs)
+        self.inference_with_gt_boxes = inference_with_gt_boxes
+
+    @classmethod
+    def from_config(cls, cfg):
+        ret = super().from_config(cfg)
+        ret["inference_with_gt_boxes"] = cfg.AISTRON.INFERENCE_WITH_GT_BOXES
+        return ret
+
+    @staticmethod
+    def convert_gt_to_detected(gt_instances):
+        detected_instances = []
+        for gt_instance in gt_instances:
+            detected_instance = Instances(gt_instance.image_size)
+            detected_instance.pred_boxes = gt_instance.gt_boxes
+            detected_instance.pred_classes = gt_instance.gt_classes
+            detected_instance.scores = torch.ones_like(gt_instance.gt_classes, dtype=torch.float32)
+            '''
+            ## add gt for verifying evaluators
+            detected_instance.gt_background_objs_masks = gt_instance.gt_background_objs_masks
+            detected_instance.gt_amodal_masks = gt_instance.gt_amodal_masks
+            detected_instance.gt_visible_masks = gt_instance.gt_visible_masks
+            '''
+            detected_instances.append(detected_instance)
+
+        return detected_instances
+
+
+    def forward(self, batched_inputs: List[Dict[str, torch.Tensor]]):
+        """
+        inherit from GeneralizedRCNN.forward
+        https://github.com/facebookresearch/detectron2/blob/3ff5dd1cff4417af07097064813c9f28d7461d3c/detectron2/modeling/meta_arch/rcnn.py#L126C1-L176C22
+
+        """
+        if not self.training:
+            if not self.inference_with_gt_boxes:
+                return self.inference(batched_inputs)
+
+            detected_instances = None
+            if "instances" in batched_inputs[0]:
+                gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
+                detected_instances = self.convert_gt_to_detected(gt_instances)
+            else:
+                print("WARNING: no gt_instances found in batched_inputs to inference_with_gt_boxes")
+
+            return self.inference(batched_inputs, detected_instances=detected_instances)
+
+        super().forward(batched_inputs)
+
+
 
     def inference(
         self,

@@ -31,10 +31,12 @@ from detectron2.evaluation import (
 )
 from detectron2.modeling import GeneralizedRCNNWithTTA
 from detectron2.data import build_detection_train_loader
+from detectron2.data import build_detection_test_loader
 
 # aistron
 from aistron.data import AmodalDatasetMapper
 from aistron.evaluation import AmodalInstanceEvaluator
+from aistron.config import add_aistron_config
 
 # aisformer
 import aisformer
@@ -76,6 +78,11 @@ class Trainer(DefaultTrainer):
         return build_detection_train_loader(cfg, mapper=mapper)
 
     @classmethod
+    def build_test_loader(cls, cfg, dataset_name):
+        mapper = AmodalDatasetMapper(cfg, is_train=False)
+        return build_detection_test_loader(cfg, dataset_name, mapper=mapper)
+
+    @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         return build_evaluator(cfg, dataset_name, output_folder)
 
@@ -102,6 +109,7 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = get_cfg()
+    add_aistron_config(cfg)
     add_aisformer_config(cfg)
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
