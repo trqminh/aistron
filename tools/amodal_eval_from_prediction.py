@@ -33,6 +33,24 @@ def print_csv_format(res, task):
         print("copypaste: " + ",".join(["{0:.4f}".format(k[1]) for k in important_res]))
 
 
+def eval_iou_only(annFile, resFile):
+    """
+    this is when the resFile using the bounding box ground truth
+    and the prediction is just the instance mask inside that box
+    now computing ap would be pointless, so we just compute iou
+    to reflect more accurately the quality of the mask
+    """
+    
+    # first assert that the number of instances in the resFile is the same as in the annFile
+    with open(resFile, 'r') as f:
+        predictions = json.load(f)
+    with open(annFile, 'r') as f:
+        gt = json.load(f)
+
+    assert len(predictions) == len(gt), "number of instances in the prediction and ground truth should be the same"
+    # TODO: implement the iou computation
+    pass
+
 
 def amodal_eval_from_prediction(
         annFile,
