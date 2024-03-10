@@ -9,12 +9,14 @@ import time
 import warnings
 import cv2
 import tqdm
+import itertools
 
 from detectron2.config import get_cfg
 from detectron2.data.detection_utils import read_image
 from detectron2.utils.logger import setup_logger
 
 from predictor import VisualizationDemo
+from aistron.config import add_aistron_config
 from aistron.projects.bcnet import BCNet
 from aistron.projects.aisformer import AISFormer, add_aisformer_config
 
@@ -28,6 +30,7 @@ def setup_cfg(args):
     # To use demo for Panoptic-DeepLab, please uncomment the following two lines.
     # from detectron2.projects.panoptic_deeplab import add_panoptic_deeplab_config  # noqa
     # add_panoptic_deeplab_config(cfg)
+    add_aistron_config(cfg)
     add_aisformer_config(cfg)
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
