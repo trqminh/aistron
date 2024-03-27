@@ -63,7 +63,7 @@ class GeneralizedRCNNAmodal(GeneralizedRCNN):
 
             return self.inference(batched_inputs, detected_instances=detected_instances)
 
-        super().forward(batched_inputs)
+        return super().forward(batched_inputs)
 
 
 
