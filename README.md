@@ -6,7 +6,11 @@ AIStron is an open-source toolbox that provides current Amodal Instance Segmenta
 
 ![alt text](assets/demo_examples/kins_example_prediction.png "teaser")
 
-Major features:
+## News
+- v0.1.0 was released on Jun 19, 2023
+- BCNet and AISFormer are available (pretrained models coming soon)
+
+## Features
 - Data pipeline: We aim to standardize the annotations of existing AIS datasets 
 so that the methods can be easily implemented and generalized. This [diagram](assets/doc_imgs/aistron_figures-data_pipeline.png) 
 illustrates the data pipeline of aistron
@@ -28,8 +32,6 @@ option to choose between visible masks, occluder masks and amodal masks.
     - [ ] [ORCNN](./projects/ORCNN/)
     - [ ] [VRSP-Net](./projects/VRSP-Net/)
 
-## News
-- v0.1.0 was released on Jun 19, 2023
 
 ## Installation
 See [installation instructions](docs/INSTALL.md).
@@ -49,7 +51,7 @@ This project is released under the [Apache 2.0 license](./LICENSE).
 If you use aistron in your research, please consider citing this repository using the following BibTeX entry.
 ```BibTeX
 @misc{tran2023aistron,
-  author =       {Minh Tran},
+  author =       {Minh Tran, Ngan Le},
   title =        {Amodal Instance Segmentation Toolbox and Benchmark},
   howpublished = {\url{https://github.com/trqminh/aistron}},
   year =         {2023}
